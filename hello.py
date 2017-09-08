@@ -19,4 +19,10 @@ name =input("please calculate 1024*768=")
 print("well,the true answer is =",1024*768,"  did you right?")
 
 #
-# name
+# 转义字符
+
+print("I\'m learning \n python3. It\'s precise ")
+
+print (r' \\\\'' 都是注意 转义 all of them')
+
+# python 基础 数据类型和变量
