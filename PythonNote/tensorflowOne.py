@@ -14,7 +14,7 @@ train = optimizer.minimize(loss)
 init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
-for step in xrange(201):
+for step in range(201): # 原代码是 xrange( ) 这里显示无法解析xrange  回头再看
     sess.run(train)
     if step % 20 == 0:
         print(step, sess.run(W), sess.run(b))
