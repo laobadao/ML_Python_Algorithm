@@ -91,15 +91,42 @@ for left_up_point in left_up_points:
                                     rectangles.append(
                                         (left_up_point, right_up_point, left_down_point, right_down_point))
 
+# rectangles.append( (left_up_point, right_up_point, left_down_point, right_down_point))
+# 存长方形 坐标时 是按（左上，右上，左下，右下）存储的，索引对应的就是  0,1,2,3
 
+# 找出面积最大的长方形
+# area 长方形的面积 和宽
+area = []
+# 长方形 准确的坐标参数
+candidate = []
+# 循环遍历算面积
+for rectangle in rectangles:
+    # 算面积之前 先验证 横向和纵向每个边长的， 每一步 也就是每个坐标上的值都是 1
+    h1 = 0
+    # 比如 (1,2 ) ---(1,8 ) 也就是 验证（1,3） （1,4）（1,5）（1,6）（1,7） （1,8） 这些坐标点的值是不是 1 ？？？？
+    for each_step_h1 in range(1, rectangle[1][1] - rectangle[0][1] + 1):
+        #  取 x 坐标 rectangle[0][0] ，递增 y 坐标 rectangle[0][1]
+        if M[rectangle[0][0], rectangle[0][1] + each_step_h1] == 1:
+            h1 += 1
+    # 比如 (1,2 ) ---(4,2 ) 也就是 验证(1,2 ) (2,2 ) (3,2 ) (4,2 ) 这些坐标点的值是不是 1
+    v1 = 0
+    for each_step_v1 in range(1, rectangle[2][0] - rectangle[0][0] + 1):
+        # 取 y 坐标固定 rectangle[0][1] ， 递增 x 坐标值 rectangle[0][0] + each_step_v1
+        if M[rectangle[0][0] + each_step_v1, rectangle[0][1]] == 1:
+            v1 += 1
 
+    # 再次验证 计算面积 存数据
+    if (h1 == (rectangle[1][1] - rectangle[0][1])) & (v1 == (rectangle[2][0] - rectangle[0][0])):
+        candidate.append(rectangle)
+        area.append(((h1 + 1) * (v1 + 1), v1, h1))
 
-
-
+print(area)
+index = area.index(max(area))
+print("左上角行数 :", (candidate[index][0][0] + 1), '列数 ：', (candidate[index][0][1] + 1),
+      "矩形的高（垂直长度）：", (area[index][1] + 1), " 宽（水平长度）：", (area[index][2] + 1))
 
 
 # print(M)
-
 # print(left_up_points)
 # print(left_down_points)
 # print(right_up_points)
@@ -107,3 +134,11 @@ for left_up_point in left_up_points:
 # print(list(range(3)))  # 不包含 最后一个 小于3
 # print(list(range(1, 3)))
 # print(rectangles)
+# print("rectangles[0][1]=", rectangles[0][1])  # 长方形列表里 [0] 索引 0 的 数据里的 右上角 坐标
+
+# for rectangle in rectangles:
+#     print(rectangle)
+#     print("rectangle[0][0]", rectangle[0][0])
+
+# ((0, 2), (0, 3), (1, 2), (1, 3))
+# rectangle[0][0]  0  也就是 （0,2）中的 x 坐标
