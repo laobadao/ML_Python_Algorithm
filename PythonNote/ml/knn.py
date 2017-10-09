@@ -10,7 +10,6 @@ k-近邻算法步骤如下：
 """
 import numpy as np
 import operator
-import time
 """
 函数说明：创建数据集
 
@@ -93,23 +92,28 @@ def classify0(testX, trainSet, labels, k):
     sortedDistIndices = distances.argsort()
     print("sortedDistIndices", sortedDistIndices)
     # sortedDistIndices [2 3 1 0]
-    # 定一个记录类别次数的字典
+    # 定一个记录类别次数的字典  字典 类似于 map 存储 键值对
     classCount = {}
     for i in range(k):
         # 取出前k个元素的类别
         print("sortedDistIndices[i]:", sortedDistIndices[i])
+        print("labels:", labels)
         voteIlabel = labels[sortedDistIndices[i]]
         print("voteIlabel:", voteIlabel)
+        print("classCount:", classCount)
         # dict.get(key,default=None),字典的get()方法,返回指定键的值,如果值不在字典中返回默认值。
-        # 计算类别次数
+        # 计算类别次数  比如 第一次 加入 武侠片时 先取之前存过的 武侠片的值 没有则默认 0 classCount.get(voteIlabel, 0)
+        # 也就是 2 对应的 武侠片 先存到 classCount 字典中 然后 累加次数
+        # 爱情片 同理 第一次 字典中没有 因为是空的 或者 只有武侠 或只有爱情 然后默认0 再加1
+        # 循环到 i =1 取出 索引 3 的值 对应的 labels 是武侠 再取字典之前的1 累加 2
         classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1
     # python3中用items()替换python2中的iteritems()
-    # key=operator.itemgetter(1)根据字典的值进行排序
+    # key=operator.itemgetter(1)根据字典的值进行排序  在这个字典中，爱情片是键，1 是值
     # key=operator.itemgetter(0)根据字典的键进行排序
-    # reverse降序排序字典
+    # reverse降序排序字典  从大到小排序
     print("classCount:", classCount)
     sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
-    # 返回次数最多的类别,即所要分类的类别
+    # 返回次数最多的类别,即所要分类的类别  前三个值里面 武侠片出现两次 分类为 武侠片
     return sortedClassCount[0][0]
 
 
