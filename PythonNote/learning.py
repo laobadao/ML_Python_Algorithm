@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-r'''
+"""
 learning.py
 
 A Python 3 tutorial from http://www.liaoxuefeng.com
@@ -9,9 +9,10 @@ A Python 3 tutorial from http://www.liaoxuefeng.com
 Usage:
 
 python3 learning.py
-'''
+"""
 
 import sys
+
 
 def check_version():
     v = sys.version_info
@@ -19,6 +20,7 @@ def check_version():
         return True
     print('Your current python is %d.%d. Please use Python 3.4.' % (v.major, v.minor))
     return False
+
 
 if not check_version():
     exit(1)
@@ -33,15 +35,18 @@ HOST = 'local.liaoxuefeng.com:%d' % PORT
 TEMP = tempfile.mkdtemp(suffix='_py', prefix='learn_python_')
 INDEX = 0
 
+
 def main():
     httpd = make_server('127.0.0.1', PORT, application)
     print('Ready for Python code on port %d...' % PORT)
     httpd.serve_forever()
 
+
 def get_name():
     global INDEX
     INDEX = INDEX + 1
     return 'test_%d' % INDEX
+
 
 def write_py(name, code):
     fpath = os.path.join(TEMP, '%s.py' % name)
@@ -50,11 +55,13 @@ def write_py(name, code):
     print('Code wrote to: %s' % fpath)
     return fpath
 
+
 def decode(s):
     try:
         return s.decode('utf-8')
     except UnicodeDecodeError:
         return s.decode('gbk')
+
 
 def application(environ, start_response):
     host = environ.get('HTTP_HOST')
@@ -62,7 +69,8 @@ def application(environ, start_response):
     path = environ.get('PATH_INFO')
     if method == 'GET' and path == '/':
         start_response('200 OK', [('Content-Type', 'text/html')])
-        return [b'<html><head><title>Learning Python</title></head><body><form method="post" action="/run"><textarea name="code" style="width:90%;height: 600px"></textarea><p><button type="submit">Run</button></p></form></body></html>']
+        return [
+            b'<html><head><title>Learning Python</title></head><body><form method="post" action="/run"><textarea name="code" style="width:90%;height: 600px"></textarea><p><button type="submit">Run</button></p></form></body></html>']
     if method == 'GET' and path == '/env':
         start_response('200 OK', [('Content-Type', 'text/html')])
         L = [b'<html><head><title>ENV</title></head><body>']
@@ -71,7 +79,8 @@ def application(environ, start_response):
             L.append(p.encode('utf-8'))
         L.append(b'</html>')
         return L
-    if host != HOST or method != 'POST' or path != '/run' or not environ.get('CONTENT_TYPE', '').lower().startswith('application/x-www-form-urlencoded'):
+    if host != HOST or method != 'POST' or path != '/run' or not environ.get('CONTENT_TYPE', '').lower().startswith(
+            'application/x-www-form-urlencoded'):
         start_response('400 Bad Request', [('Content-Type', 'application/json')])
         return [b'{"error":"bad_request"}']
     s = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
@@ -101,6 +110,7 @@ def application(environ, start_response):
         r = dict(error='Error', output='执行错误')
     print('Execute done.')
     return [json.dumps(r).encode('utf-8')]
+
 
 if __name__ == '__main__':
     main()

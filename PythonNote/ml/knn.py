@@ -51,11 +51,23 @@ if __name__ == '__main__':
     2017-09-29
 """
 
+"""
+note：
+    补充 numpy 函数 
+    1. 创建二维数组
+    2. 求数组行数
+    3. 求数组列数 
+"""
+if __name__ == '__main__':
+    testArray = np.array([[1., 2.], [2., 3.], [3., 4.], [4., 5.], [5., 6.]])
+    row = testArray.shape[0]
+    column = testArray.shape[1]
+    print("行：", row, "  列：", column)
 
 def classify0(testX, trainSet, labels, k):
     # numpy函数 shape[0] 返回 trainSet 的行数
     trainSetSize = trainSet.shape[0]
-    # 在列向量方向上重复inX共1次(横向)，行向量方向上重复inX共dataSetSize次(纵向)
+    # 在列向量方向上重复 testX 共1次(横向)，行向量方向上重复 testX 共dataSetSize次(纵向)
     diffMat = np.tile(testX, (trainSetSize, 1)) - trainSet
     # 二维特征相减后平方
     sqDiffMat = diffMat ** 2
