@@ -86,9 +86,13 @@ def classify0(testX, trainSet, labels, k):
     # 开方，计算出距离
     distances = sqDistances ** 0.5
     print("distances:", distances)
-    # 返回distances中元素从小到大排序后的索引值
+    # distances: [ 128.68954892  118.22436297   16.55294536   18.43908891]
+    # 返回distances中元素从小到大排序后的索引值  因为函数返回的排序后元素在原array中的下标
+    # 上面四个数 在array中的下标 索引是 128.68954892 - 0  ,118.22436297- 1 ,16.55294536 - 2 ,18.43908891- 3
+    # 排序后是 16.55294536  18.43908891 118.22436297 128.68954892  所以 索引 下标的排序就是 2 3 1 0
     sortedDistIndices = distances.argsort()
     print("sortedDistIndices", sortedDistIndices)
+    # sortedDistIndices [2 3 1 0]
     # 定一个记录类别次数的字典
     classCount = {}
     for i in range(k):
@@ -103,6 +107,7 @@ def classify0(testX, trainSet, labels, k):
     # key=operator.itemgetter(1)根据字典的值进行排序
     # key=operator.itemgetter(0)根据字典的键进行排序
     # reverse降序排序字典
+    print("classCount:", classCount)
     sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
     # 返回次数最多的类别,即所要分类的类别
     return sortedClassCount[0][0]
