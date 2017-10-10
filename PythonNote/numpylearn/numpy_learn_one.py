@@ -24,6 +24,7 @@ newSet = np.tile([1, 5], (2, 3))
 #  [1 5 1 5 1 5]]
 diffMat = np.array([7, 3]) - np.array([2, 1])
 print(diffMat)
-
 print(diffMat ** 2)
+
+
 
