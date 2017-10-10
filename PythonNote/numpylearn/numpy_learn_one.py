@@ -144,4 +144,25 @@ print("a2 + a1:", a2 + a1)
 print("a2 * a1:", a2 * a1)
 print("每个元素平方：a1 ** 2：", a1 **2)
 
+twoDimensionArray = array([[2, 3, 4],
+                           [4, 5, 6]])
+print("twoDimensionArray[0]:", twoDimensionArray[0])
+print("twoDimensionArray[0][1]:", twoDimensionArray[0][1])
+print("twoDimensionArray[0, 1]:", twoDimensionArray[0, 1])
+
+"""
+矩阵 MAT matrix
+"""
+
+newMat = mat([2, 3, 4])
+print(newMat)
+print(newMat[0, 2])
+
+newMat1 = newMat.T
+print("转置 newMat.T: ", newMat1)
+
+print("newMat * newMat1=", newMat * newMat1)
+
+
+
 
