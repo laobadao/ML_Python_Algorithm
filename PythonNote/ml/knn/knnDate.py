@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
 
 """
 函数说明:打开并解析文件，对数据进行分类：1代表不喜欢,2代表魅力一般,3代表极具魅力
@@ -70,3 +72,7 @@ if __name__ == '__main__':
     datingMat, datingLabels = file2Matrix(fileName)
     print(datingMat)
     print(datingLabels)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(datingMat[:, 1], datingMat[:, 2])
+    plt.show()
