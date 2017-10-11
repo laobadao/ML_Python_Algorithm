@@ -125,7 +125,7 @@ for item in a:
 
 print(myNewList)
 
-myVeryConciseList = [item*2 for item in a if item > 2]
+myVeryConciseList = [item * 2 for item in a if item > 2]
 
 print(myVeryConciseList)
 
@@ -142,7 +142,7 @@ print("a2:", a2)
 print("a2 - a1:", a2 - a1)
 print("a2 + a1:", a2 + a1)
 print("a2 * a1:", a2 * a1)
-print("每个元素平方：a1 ** 2：", a1 **2)
+print("每个元素平方：a1 ** 2：", a1 ** 2)
 
 twoDimensionArray = array([[2, 3, 4],
                            [4, 5, 6]])
@@ -162,7 +162,35 @@ newMat1 = newMat.T
 print("转置 newMat.T: ", newMat1)
 
 print("newMat * newMat1=", newMat * newMat1)
+# shape() 查看矩阵维度 （行数，列数）
+print("shape(newMat):", shape(newMat))
 
+print("矩阵行数：", newMat.shape[0])
+print("矩阵列数：", newMat.shape[1])
 
+# 矩阵中每个元素对应相乘
+print("newMat:", newMat)
+print("newMat1:", newMat1)
+print("multiply(newMat, newMat1);", multiply(newMat, newMat1))
 
+# sort() 排序 占原有存储空间  argsort() 返回的是排序后的 元素的 索引坐标
+# sort(a, axis=-1, kind='quicksort', order=None):
+disMat = mat([9, 2, 0, 3])
+print("disMat:", disMat)
+print("sort(disMat):", sort(disMat))
+disMat = mat([9, 2, 0, 3])
+print("argsort(disMat):", argsort(disMat))
 
+# 求矩阵均值 mean() 相加/个数 （9+2+0+3）/4 =3.5
+
+print("disMat.mean:", disMat.mean())
+
+disMat = mat([[1, 2, 3, 4, 5, 6, 7, 8, 9],
+              [9, 8, 7, 6, 5, 4, 3, 2, 1]])
+print("disMat.mean:", disMat.mean())
+
+# 多维数组 取出某一行  通过 行号和 ： 来完成
+print("取出第二行，索引为 1 ,disMat[1, :] =", disMat[1, :])
+
+# 矩阵 中 某一行 中 指定范围 某一行共 10 个 中间5个
+print("取出第二行，索引为 1 到 4 包含1 不含4 ,从 第二个 到第5个 disMat[1, :] =", disMat[1, 1:4])

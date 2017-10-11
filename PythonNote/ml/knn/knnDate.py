@@ -24,6 +24,7 @@ def file2Matrix(fileName):
     # '14488\t7.153469\t1.673904\tsmallDoses\n', '26052\t1.441871\t0.805124\tdidntLike\n', 得到文件行数
     numberOfLines = len(arrayOLines)
     # 返回的 NumPy 矩阵,解析完成的数据:numberOfLines行,3列  np.zeros  m×n 的double类零矩阵 1.  0.  代表double 类
+    # returnMat 先构造成 numberOfLines * 3 矩阵
     returnMat = np.zeros((numberOfLines, 3))
     # print("returnMat", returnMat)
     # 返回的分类标签向量
@@ -34,11 +35,16 @@ def file2Matrix(fileName):
     for line in arrayOLines:
         # s.strip(rm)，当rm空时,默认删除 字符串 开头和结尾的 空白符(包括'\n','\r','\t',' ')
         line = line.strip()
+        # print("line:", line)
         # 使用s.split(str="",num=string,cout(str))将字符串根据'\t'分隔符进行切片。
         listFromLine = line.split('\t')
+        # print("listFromLine:", listFromLine)
         # 将数据前三列提取出来,存放到returnMat的NumPy矩阵中,也就是特征矩阵
+        # listFromLine[0:3]  index= 0 从 第0 行开始取 取所有行，每一行 取前三列 数据
+        #  赋值给  returnMat[index, :] 第 index 行 所有列
         returnMat[index, :] = listFromLine[0:3]
         # 根据文本中标记的喜欢的程度进行分类,1代表不喜欢,2代表魅力一般,3代表极具魅力
+        # 判断 最后一列 字符串 存 labels 标签  list[-1] -1 代表最后一个元素
         if listFromLine[-1] == 'didntLike':
             classLabelVector.append(1)
         elif listFromLine[-1] == 'smallDoses':
