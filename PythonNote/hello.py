@@ -26,3 +26,5 @@ print("I\'m learning \n python3. It\'s precise ")
 print (r' \\\\'' 都是注意 转义 all of them')
 
 # python 基础 数据类型和变量
+
+#  记个额外 pip 升级的 命令 pip3 install --upgrade matplotlib
