@@ -285,6 +285,40 @@ def showData(datingDataMat, datingLabels):
 
 
 """
+函数说明:通过输入一个人的三维特征,进行分类输出
+
+Parameters:
+    无
+Returns:
+    无
+Modify:
+    2017-10-12
+"""
+
+
+def classifyPerson():
+    # 输出结果
+    resultList = ['讨厌', '有些喜欢', '非常喜欢']
+    # 三维特征用户输入 input() 根据 用户数据输入 得到实际数据然后执行后续运算
+    precentTats = float(input("玩视频游戏所耗时间百分比:"))
+    ffMiles = float(input("每年获得的飞行常客里程数:"))
+    iceCream = float(input("每周消费的冰激淋公升数:"))
+    # 打开的文件名
+    filename = "datingTestSet.txt"
+    # 打开并处理数据
+    datingDataMat, datingLabels = file2Matrix(filename)
+    # 训练集归一化
+    normMat, ranges, minVals = normData(datingDataMat)
+    # 生成NumPy数组,测试集
+    inArr = np.array([precentTats, ffMiles, iceCream])
+    # 测试集归一化
+    norminArr = (inArr - minVals) / ranges
+    # 进行分类器算法分类 返回测试结果
+    classifyResult = classify0(norminArr, normMat, datingLabels, 3)
+    print("你可能 %s 这个人" % resultList[classifyResult])
+
+
+"""
 函数说明:main函数
 
 Parameters:
@@ -302,7 +336,11 @@ if __name__ == '__main__':
     # print("ranges", ranges)
     # print("minVals", minVals)
     # 测试分类器算法 KNN
-    datingClassTest()
+    # datingClassTest()
+    # 最后：构建可用的约会系统
+    classifyPerson()
+
+
 
 # print(datingMat)
 # print(datingLabels)

@@ -18,7 +18,7 @@
     <SUITE FILE_PATH="coverage/PythonNote$circular_counter.coverage" NAME="circular_counter Coverage Results" MODIFIED="1507517046380" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algorithm" />
     <SUITE FILE_PATH="coverage/PythonNote$numpy_learn_one.coverage" NAME="numpy_learn_one Coverage Results" MODIFIED="1507792303981" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/numpylearn" />
     <SUITE FILE_PATH="coverage/PythonNote$matrix.coverage" NAME="matrix Coverage Results" MODIFIED="1506670924692" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algorithm" />
-    <SUITE FILE_PATH="coverage/PythonNote$knnDate.coverage" NAME="knnDate Coverage Results" MODIFIED="1507796815927" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ml/knn" />
+    <SUITE FILE_PATH="coverage/PythonNote$knnDate.coverage" NAME="knnDate Coverage Results" MODIFIED="1507799006168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ml/knn" />
   </component>
   <component name="FileColors">
     <fileColor scope="Non-Project Files (Material Default)" color="2E3C43" />
@@ -63,8 +63,8 @@
       <file leaf-file-name="knnDate.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ml/knn/knnDate.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="169" column="40" lean-forward="true" selection-start-line="169" selection-start-column="40" selection-end-line="169" selection-end-column="40" />
+            <state relative-caret-position="246">
+              <caret line="303" column="43" lean-forward="true" selection-start-line="303" selection-start-column="43" selection-end-line="303" selection-end-column="43" />
               <folding>
                 <element signature="e#24#42#0" expanded="true" />
               </folding>
@@ -805,8 +805,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ml/knn/knnDate.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="169" column="40" lean-forward="true" selection-start-line="169" selection-start-column="40" selection-end-line="169" selection-end-column="40" />
+        <state relative-caret-position="246">
+          <caret line="303" column="43" lean-forward="true" selection-start-line="303" selection-start-column="43" selection-end-line="303" selection-end-column="43" />
           <folding>
             <element signature="e#24#42#0" expanded="true" />
           </folding>
