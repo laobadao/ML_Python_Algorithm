@@ -194,3 +194,31 @@ print("取出第二行，索引为 1 ,disMat[1, :] =", disMat[1, :])
 
 # 矩阵 中 某一行 中 指定范围 某一行共 10 个 中间5个
 print("取出第二行，索引为 1 到 4 包含1 不含4 ,从 第二个 到第5个 disMat[1, :] =", disMat[1, 1:4])
+
+# [:,1] [: 1] 从矩阵中取值的区别  中间少个逗号
+
+twoDimenMat = mat([[1, 2, 3],
+                   [11, 21, 31],
+                   [111, 211, 311],
+                   [12, 23, 33],
+                   [13, 23, 33],
+                   [112, 212, 312],
+                   [1, 2, 3],
+                   [1, 2, 3],
+                   [1, 2, 3],
+                   [123, 223, 323],
+                   ])
+#  应该取的是第一列  取的是 twoDimenMat 10 * 3 维矩阵 取出的是 10 *1 且元素都是1
+print("twoDimenMat[:, 0]", twoDimenMat[:, 0])
+# 相当于取的是第一行数据 twoDimenMat[:1] 相当于是个取值范围 取的是  0行 到1 行的值 1且不包含1
+print("twoDimenMat[:1]", twoDimenMat[:1])
+# twoDimenMat[1] 取的值具体向量 第二行索引为1 的数据
+print("twoDimenMat[1]", twoDimenMat[1])
+# 取值 是 0到 5行 不包含5 就是 0 到 4 共5行 第二列的数据
+print("twoDimenMat[:5, 1]", twoDimenMat[:5, 1])
+# 取值区间 索引为 3 4 5 不包括6 第二列的数据
+print("twoDimenMat[:5, 1]", twoDimenMat[3:6, 1])
+
+threeMat = mat([[9, 9, 9], [1, 2, 3], [0.1, 0.1, 0.2]])
+print("threeMat.min(0)", threeMat.min(0))
+print("threeMat.max(0)", threeMat.max(0))
