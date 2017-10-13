@@ -2,7 +2,8 @@
 import numpy as np
 import operator
 from os import listdir
-from sklearn.neighbors import KNeighborsClassifier as kNN
+# from sklearn.neighbors import KNeighborsClassifier as kNN
+from sklearn.neighbors import  KNeighborsClassifier as kNN
 
 """
 函数说明:将32x32的二进制图像转换为1x1024向量。
@@ -36,6 +37,12 @@ def img2vector(filename):
 """
 函数说明:手写数字分类测试
 
+这两行是精髓
+# 构建kNN分类器
+    neigh = kNN(n_neighbors=3, algorithm='auto')
+    # 拟合模型, trainingMat为测试矩阵,hwLabels为对应的标签
+    neigh.fit(trainingMat, hwLabels)
+
 Parameters:
 	无
 Returns:
@@ -65,9 +72,12 @@ def handwritingClassTest():
         hwLabels.append(classNumber)
         # 将每一个文件的1x1024数据存储到trainingMat矩阵中
         trainingMat[i, :] = img2vector('trainingDigits/%s' % (fileNameStr))
-        # 构建kNN分类器
+    # 构建kNN分类器 n_neighbors 选 3 个临近点
+    #  algorithm='auto' 快速k近邻搜索算法，默认参数为auto，可以理解为算法自己决定合适的搜索算法。
+    # neigh = kNN(n_neighbors=3, algorithm='auto')
+    # # 拟合模型, trainingMat为测试矩阵,hwLabels为对应的标签
+    # neigh.fit(trainingMat, hwLabels)
     neigh = kNN(n_neighbors=3, algorithm='auto')
-    # 拟合模型, trainingMat为测试矩阵,hwLabels为对应的标签
     neigh.fit(trainingMat, hwLabels)
     # 返回testDigits目录下的文件列表
     testFileList = listdir('testDigits')
@@ -82,13 +92,14 @@ def handwritingClassTest():
         # 获得分类的数字
         classNumber = int(fileNameStr.split('_')[0])
         # 获得测试集的1x1024向量,用于训练
-        vectorUnderTest = img2vector('testDigits/%s' % (fileNameStr))
+        vectorUnderTest = img2vector('testDigits/%s' % fileNameStr)
         # 获得预测结果
         # classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
         classifierResult = neigh.predict(vectorUnderTest)
         print("分类返回结果为%d\t真实结果为%d" % (classifierResult, classNumber))
-        if (classifierResult != classNumber):
+        if classifierResult != classNumber:
             errorCount += 1.0
+            print("第 %d 个数据是错了" % i)
     print("总共错了%d个数据\n错误率为%f%%" % (errorCount, errorCount / mTest * 100))
 
 

@@ -7,15 +7,15 @@ from os import listdir
 函数说明:kNN算法,分类器
 
 Parameters:
-	inX - 用于分类的数据(测试集)
-	dataSet - 用于训练的数据(训练集)
-	labes - 分类标签
-	k - kNN算法参数,选择距离最小的k个点
+    inX - 用于分类的数据(测试集)
+    dataSet - 用于训练的数据(训练集)
+    labes - 分类标签
+    k - kNN算法参数,选择距离最小的k个点
 Returns:
-	sortedClassCount[0][0] - 分类结果
+    sortedClassCount[0][0] - 分类结果
 
 Modify:
-	2017-03-25
+    2017-10-13
 """
 
 
@@ -53,21 +53,33 @@ def classify0(inX, dataSet, labels, k):
 函数说明:将32x32的二进制图像转换为1x1024向量。
 
 Parameters:
-	filename - 文件名
+    filename - 文件名
 Returns:
-	returnVect - 返回的二进制图像的1x1024向量
+    returnVect - 返回的二进制图像的1x1024向量
 
 Modify:
-	2017-03-25
+    2017-10-13
 """
+
+# def img2vector(filename):
+#     # 打开文件
+#     file = open(filename)
+#     # 因为 训练数据是 32 * 32  共 1024 个0或1 组合而成，所以创建 1 * 1024 的 0 矩阵用来存储数据
+#     returnVec = np.zeros((1, 1024))
+#     # 双层for循环 读取 每一行 每一列的 数据 str 转换成 int 注意如何取值和存储 定位 坐标 索引位置
+#     for i in range(32):
+#         lineStr = file.readline()
+#         for j in range(32):
+#             returnVec[0, 32 * i + j] = int(lineStr[j])
+#     return returnVec
 
 
 def img2vector(filename):
-    # 创建1x1024零向量
+    # 创建1x1024零向量 因为 训练数据是 32 * 32  共 1024 个0或1 组合而成，所以创建 1 * 1024 的 0 矩阵用来存储数据
     returnVect = np.zeros((1, 1024))
     # 打开文件
     fr = open(filename)
-    # 按行读取
+    # 按行读取 双层for循环 读取 每一行 每一列的 数据 str 转换成 int 注意如何取值和存储 定位 坐标 索引位置
     for i in range(32):
         # 读一行数据
         lineStr = fr.readline()
@@ -82,12 +94,12 @@ def img2vector(filename):
 函数说明:手写数字分类测试
 
 Parameters:
-	无
+    无
 Returns:
-	无
+    无
 
 Modify:
-	2017-03-25
+    2017-03-25
 """
 
 
@@ -98,15 +110,15 @@ def handwritingClassTest():
     trainingFileList = listdir('trainingDigits')
     # 返回文件夹下文件的个数
     m = len(trainingFileList)
-    # 初始化训练的Mat矩阵,测试集
+    # 初始化训练的Mat矩阵,测试集 m 个文件 创建 m * 1024 的矩阵
     trainingMat = np.zeros((m, 1024))
     # 从文件名中解析出训练集的类别
     for i in range(m):
         # 获得文件的名字
         fileNameStr = trainingFileList[i]
-        # 获得分类的数字
+        # 获得分类的数字  文件名为 0_0  1_0 分割后 取0 位 则为 该文件内的数字
         classNumber = int(fileNameStr.split('_')[0])
-        # 将获得的类别添加到hwLabels中
+        # 将获得的类别添加到hwLabels中 也就是 每个文件中 手写数字的 对应的真实数字
         hwLabels.append(classNumber)
         # 将每一个文件的1x1024数据存储到trainingMat矩阵中
         trainingMat[i, :] = img2vector('trainingDigits/%s' % (fileNameStr))
@@ -136,12 +148,12 @@ def handwritingClassTest():
 函数说明:main函数
 
 Parameters:
-	无
+    无
 Returns:
-	无
+    无
 
 Modify:
-	2017-03-25
+    2017-03-25
 """
 if __name__ == '__main__':
     handwritingClassTest()

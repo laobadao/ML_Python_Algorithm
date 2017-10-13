@@ -329,16 +329,16 @@ Returns:
 
 if __name__ == '__main__':
     # 打开的文件名
-    # fileName = "datingTestSet.txt"
-    # datingMat, datingLabels = file2Matrix(fileName)
-    # normDataSet, ranges, minVals = normData(datingMat)
+    fileName = "datingTestSet.txt"
+    datingMat, datingLabels = file2Matrix(fileName)
+    normDataSet, ranges, minVals = normData(datingMat)
     # print("normDataSet", normDataSet)
     # print("ranges", ranges)
     # print("minVals", minVals)
     # 测试分类器算法 KNN
     # datingClassTest()
     # 最后：构建可用的约会系统
-    classifyPerson()
+    # classifyPerson()
 
 
 
