@@ -165,5 +165,4 @@ if __name__ == '__main__':
 
     # subData = splitDataSet(dataSet, 2, 0)
     # print("subData:", subData)
-    bestFeature = chooseBestFeatureToSplit(dataSet)
-    print(bestFeature)
+    print("最优特征索引值:" + str(chooseBestFeatureToSplit(dataSet)))
