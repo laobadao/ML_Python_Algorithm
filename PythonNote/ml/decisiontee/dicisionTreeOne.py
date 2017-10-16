@@ -69,7 +69,7 @@ def calcuShannonEnt(dataSet):
         countLables[currentLabel] += 1  # Label计数 累计加一
     # 初始化经验熵(香农熵)
     shannonEnt = 0.0
-    # for 计算香农熵 利用公式 
+    # for 计算香农熵 利用公式
     for eachLabel in countLables:
         # 计算选择该标签(Label)的概率
         p = float(countLables[eachLabel]) / rows
@@ -79,8 +79,91 @@ def calcuShannonEnt(dataSet):
     return shannonEnt
 
 
+"""
+函数说明:按照给定特征划分数据集
+
+Parameters:
+    dataSet - 待划分的数据集
+    axis - 划分数据集的特征
+    value - 需要返回的特征的值
+Returns:
+    retDataSet - 将符合条件的添加到返回的数据集
+Modify:
+    2017-10-16
+"""
+
+
+# 取出 二维数组dataSet中 ，某一列 axis 列 ，中 值 等于 value 的
+def splitDataSet(dataSet, axis, value):
+    retDataSet = []  # 创建返回的数据集列表  不包含 该列值等于value的
+    for featVec in dataSet:  # 遍历数据集 先取出每一行数据
+        if featVec[axis] == value:
+            # 去掉 axis 特征 所在列
+            reducedFeatVec = featVec[:axis]  # 先存 axis 索引前的数据
+            # print("reducedFeatVec", reducedFeatVec)
+            reducedFeatVec.extend(featVec[axis + 1:])  # 再存 axis 索引后的数据 将符合条件的添加到返回的数据集
+            # print("featVec[axis + 1:]", featVec[axis + 1:])
+            # print("reducedFeatVec", reducedFeatVec)
+            retDataSet.append(reducedFeatVec)
+    return retDataSet
+
+
+"""
+函数说明:选择最优特征
+
+Parameters:
+    dataSet - 数据集
+Returns:
+    bestFeature - 信息增益最大的(最优)特征的索引值
+
+Modify:
+    2017-10-16
+"""
+
+
+def chooseBestFeatureToSplit(dataSet):
+    # 特征数量 最后一项 yes / or 是 最终结果 不是特征 len(dataSet[0]) 总列数
+    numFeatures = len(dataSet[0]) - 1
+    # 计算数据集的香农熵 H(D)
+    baseEnt = calcuShannonEnt(dataSet)
+    # 信息增益 初始化信息增益值
+    bestInfoGain = 0.0
+    # 最优特征的索引值 也就是 信息增益值 最大的 初始化为 -1
+    bestFeature = -1
+    # for 遍历所有特征 numFeatures 是 int 值 for  i++ 记得加 range
+    for i in range(numFeatures):
+        # 获取dataSet的第i个所有特征 也就是将 dataset 的 除去最后一列的 其他每一列 的数据取出来
+        featList = [example[i] for example in dataSet]
+        # 创建set集合{},元素不可重复 将取出的数据 通过转化为set()集合 去掉重复数据 如 [1,1,1,2] -set()-[1,2]
+        uniqueFeatures = set(featList)
+        # 经验条件熵 初始化每一个特征的经验条件熵
+        newEachFeaEnt = 0.0
+        # 计算信息增益 每一个特征的 。得先划分子集
+        for value in uniqueFeatures:
+            # 第 i 列的数据集中，value 值在该特征中 所占比例，也就是 比如 uniqueFeatures {1,2,3}
+            # dataSet 中 对应该列的值 value  所占的比例 [1,1,1,2,2,3] 1 占比3/6  ，2 占比 2/6 ,3 占比 1/6
+            # subDataSet划分后的子集
+            subDataSet = splitDataSet(dataSet, i, value)
+            # 计算子集的概率 其实就是先默认选一个特征为root 特征
+            prob = len(subDataSet) / float(len(dataSet))
+            # 根据公式计算经验条件熵 [5/15 H(D1) + 5/15 H(D2)+5/15 H(D3) ]
+            newEachFeaEnt += prob * calcuShannonEnt(subDataSet)
+            # 信息增益 g(D,A) = H(D) - H(D|A)
+        infoGain = baseEnt - newEachFeaEnt
+        print("第%d个特征的增益为%.3f" % (i, infoGain))  # 打印每个特征的信息增益
+        if infoGain > bestInfoGain:  # 两两对比找最大值 存储 索引
+            bestInfoGain = infoGain
+            bestFeature = i
+    return bestFeature
+
+
 if __name__ == '__main__':
     dataSet, labels = createDataSet()
-    shannonEnt = calcuShannonEnt(dataSet)
-    print(dataSet)
-    print(shannonEnt)  # 0.9709505944546686
+    # shannonEnt = calcuShannonEnt(dataSet)
+    # print(dataSet)
+    # print(shannonEnt)  # 0.9709505944546686
+
+    # subData = splitDataSet(dataSet, 2, 0)
+    # print("subData:", subData)
+    bestFeature = chooseBestFeatureToSplit(dataSet)
+    print(bestFeature)

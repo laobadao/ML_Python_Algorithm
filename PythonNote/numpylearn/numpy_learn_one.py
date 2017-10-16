@@ -222,3 +222,8 @@ print("twoDimenMat[:5, 1]", twoDimenMat[3:6, 1])
 threeMat = mat([[9, 9, 9], [1, 2, 3], [0.1, 0.1, 0.2]])
 print("threeMat.min(0)", threeMat.min(0))
 print("threeMat.max(0)", threeMat.max(0))
+
+dataSet1 = [0, 1, 2, 3, 4, 5]
+
+print("dataSet1[:1]", dataSet1[:1]) # : 表示区间 [:1] 对于 list 来说 代表 取 0到1 之间的数据 不包含1
+print("dataSet1[1+1:]", dataSet1[1+1:])  # [1+1:] 代表 取 索引2 往后的数据 包含2
