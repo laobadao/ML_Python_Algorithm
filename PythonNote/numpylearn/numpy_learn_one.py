@@ -225,5 +225,28 @@ print("threeMat.max(0)", threeMat.max(0))
 
 dataSet1 = [0, 1, 2, 3, 4, 5]
 
-print("dataSet1[:1]", dataSet1[:1]) # : 表示区间 [:1] 对于 list 来说 代表 取 0到1 之间的数据 不包含1
-print("dataSet1[1+1:]", dataSet1[1+1:])  # [1+1:] 代表 取 索引2 往后的数据 包含2
+print("dataSet1[:1]", dataSet1[:1])  # : 表示区间 [:1] 对于 list 来说 代表 取 0到1 之间的数据 不包含1
+print("dataSet1[1+1:]", dataSet1[1 + 1:])  # [1+1:] 代表 取 索引2 往后的数据 包含2
+
+"""
+append() and  extend()  区别
+
+"""
+
+a = [1, 2, 3]
+b = [4, 5, 6]
+a.append(b)
+print("a.append(b):", a)  # [1, 2, 3, [4, 5, 6]]
+a = [1, 2, 3]
+a.extend(b)
+print("a.extend(b):", a)  # [1, 2, 3, 4, 5, 6]
+
+labels = ['年龄', '有工作', '有自己的房子', '信贷情况']
+bestFeat = 2  # 索引2 要删除索引为2 的元素
+del (labels[bestFeat])
+print(labels)  # ['年龄', '有工作', '信贷情况']
+
+key1 = "iii"
+dics = {key1: {}}
+dics[key1][value] = {"ooo": {}}
+print(dics)  # {'iii': {'ooo': {}}}
