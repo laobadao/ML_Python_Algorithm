@@ -1,4 +1,7 @@
 import pandas as pd
+from sklearn.preprocessing import  LabelEncoder
+import  pydotplus
+from  sklearn.externals.six import  StringIO
 
 if __name__ == '__main__':
     # 加载文件
@@ -33,6 +36,13 @@ if __name__ == '__main__':
     lenses_pd = pd.DataFrame(lenses_dict)
     print(lenses_pd)
 
+    # 创建LabelEncoder()对象，用于序列化  将string类型数字化
+    # 简单来说 LabelEncoder 是对不连续的数字或者文本进行编号
+    le = LabelEncoder()
+    # 为每一列序列化
+    for col in lenses_pd.columns:
+        lenses_pd[col] = le.fit_transform(lenses_pd[col])
+    print(lenses_pd)
 
     # from sklearn import tree
     #
