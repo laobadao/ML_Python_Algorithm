@@ -1,7 +1,9 @@
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn.externals.six import StringIO
+from sklearn import tree
 import pandas as pd
-from sklearn.preprocessing import  LabelEncoder
-import  pydotplus
-from  sklearn.externals.six import  StringIO
+import numpy as np
+import pydotplus
 
 if __name__ == '__main__':
     # 加载文件
@@ -13,6 +15,7 @@ if __name__ == '__main__':
     # 把数据集中 最后一列的 标签 存储起来
     for each in lenses:
         lenses_target.append(each[-1])
+    print(lenses_target)
     # 特征标签
     lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
     # 保存lenses数据的临时列表
@@ -31,10 +34,10 @@ if __name__ == '__main__':
         lenses_dict[each_label] = lenses_list
         # 再清空 重置 lenses_list ，再存储下一组特征的数据
         lenses_list = []
-    print("lenses_dict: ", lenses_dict)
+    # print("lenses_dict: ", lenses_dict)
     # pandas DataFrame
     lenses_pd = pd.DataFrame(lenses_dict)
-    print(lenses_pd)
+    # print(lenses_pd)
 
     # 创建LabelEncoder()对象，用于序列化  将string类型数字化
     # 简单来说 LabelEncoder 是对不连续的数字或者文本进行编号
@@ -42,16 +45,31 @@ if __name__ == '__main__':
     # 为每一列序列化
     for col in lenses_pd.columns:
         lenses_pd[col] = le.fit_transform(lenses_pd[col])
-    print(lenses_pd)
+    # print(lenses_pd)
 
-    # from sklearn import tree
-    #
-    # if __name__ == '__main__':
-    #     fr = open('lenses.txt')
-    #     # for 循环遍历 行 每行 去掉首尾空白符 根据 \t 进行切割
-    #     lenses = [inst.strip().split('\t') for inst in fr.readline()]
-    #     print(lenses)
-    #     lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
-    #     # 使用 sklearn 中决策树的  DecisionTreeClassifier （）方法
-    #     clf = tree.DecisionTreeClassifier()
-    #     lenses = clf.fit(lenses, lensesLabels)
+    # 可视化数据
+    # 创建DecisionTreeClassifier()类  最大深度限制为4
+    clf = tree.DecisionTreeClassifier(max_depth=4)
+    # 使用数据，构建决策树 取出 lenses_pd 中的 values 转化为 list
+    # 传入 训练数据和类别 list
+    # clf = clf.fit(lenses_pd.values.tolist(), lenses_target)
+    # dot_data = StringIO()
+    # tree.export_graphviz(clf, out_file=dot_data,
+    #                      feature_names=lenses_pd.keys(),
+    #                      class_names=clf.classes_,
+    #                      filled=True, rounded=True,
+    #                      special_characters=True)
+    # graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    # graph.write_pdf("tree.pdf")
+
+    clf = tree.DecisionTreeClassifier(max_depth=4)  # 创建DecisionTreeClassifier()类
+    clf = clf.fit(lenses_pd.values.tolist(), lenses_target)  # 使用数据，构建决策树
+    dot_data = StringIO()
+    tree.export_graphviz(clf, out_file=dot_data,  # 绘制决策树
+                         feature_names=lenses_pd.keys(),
+                         class_names=clf.classes_,
+                         filled=True, rounded=True,
+                         special_characters=True)
+    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    graph.write_pdf("tree.pdf")
+
