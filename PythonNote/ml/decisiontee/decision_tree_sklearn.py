@@ -3,8 +3,8 @@ import pandas as pd
 if __name__ == '__main__':
     # 加载文件
     with open('lenses.txt', 'r') as fr:
-        # 处理文件
-        lenses = [line.strip().split('\t') for line in fr.readline()]
+        # 处理文件  fr.readline()  是读取一行  readlines 读取所有行
+        lenses = [line.strip().split('\t') for line in fr.readlines()]
     # 提取每组数据的类别，保存在列表里
     lenses_target = []
     # 把数据集中 最后一列的 标签 存储起来
