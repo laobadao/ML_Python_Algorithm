@@ -2,6 +2,7 @@ from matplotlib.font_manager import FontProperties
 import matplotlib.pyplot as plt
 from math import log
 import operator
+import pickle
 
 """
 函数说明:创建测试数据集
@@ -239,7 +240,7 @@ def createTree(dataSet, labels, featLabels):
     # ['年龄', '有工作', '有自己的房子', '信贷情况']  根据最优特征的索引 找到对应的 文字说明
     bestFeatLabel = labels[bestFeat]  # 最优特征的标签
     featLabels.append(bestFeatLabel)
-    print("featLabels.append",featLabels)
+    # print("featLabels.append", featLabels)
     myTree = {bestFeatLabel: {}}  # 根据最优特征的标签生成树 先加入根 root
     # print("myTree", myTree)
     del (labels[bestFeat])  # 删除已经使用特征标签
@@ -501,6 +502,55 @@ def classify(inputTree, featLabels, testVec):
     return classLabel
 
 
+"""
+函数说明:存储决策树
+
+Parameters:
+    inputTree - 已经生成的决策树
+    filename - 决策树的存储文件名
+Returns:
+    无
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-07-25
+"""
+
+
+def storeTree(inputTree, filename):
+    # 打开文件 open () 操作后 需要关闭 close()
+    # Python引入了with语句来自动帮我们调用close()方法：
+    # 'r' 是读文件 read 传入标识符'w'或者'wb'表示写文本文件或写二进制文件： wb write binary
+    with open(filename, 'wb') as fw:
+        pickle.dump(inputTree, fw)
+
+
+"""
+函数说明:读取决策树
+
+Parameters:
+    filename - 决策树的存储文件名
+Returns:
+    pickle.load(fr) - 决策树字典
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-07-25
+Note: 
+    ZJ learning in 2017-10-18
+"""
+
+
+def grabTree(filename):
+    # 'rb' read binary 读取二进制文件
+    fr = open(filename, 'rb')
+    return pickle.load(fr)
+
+
 if __name__ == '__main__':
     dataSet, labels = createDataSet()
     # shannonEnt = calcuShannonEnt(dataSet)
@@ -522,15 +572,25 @@ if __name__ == '__main__':
     # featLabels 在外层初始化 初始化 是空list 在进行迭代的过程中featLabels 是有新赋值的
     # featLabels  ['有自己的房子']  ['有自己的房子', '有工作'] ，
     # 也就是 最后 存储这两个 特征值使用这两个特征值就可以将数据全部分类完毕
-    featLabels = []
-    myTree = createTree(dataSet, labels, featLabels)
-    # featLabels ['有自己的房子', '有工作']
-    print("featLabels", featLabels)
-    # 根据 featLabels 只有两个特征值，所有测试数据给出两个值 就可以使用决策树得到最后分类结果
-    testVec = [1, 1]  # 没房 有工作
-    # featLabels ['有自己的房子', '有工作']
-    result = classify(myTree, featLabels, testVec)
-    if result == 'yes':
-        print('放贷')
-    if result == 'no':
-        print('不放贷')
+    # featLabels = []
+    # myTree = createTree(dataSet, labels, featLabels)
+    # # featLabels ['有自己的房子', '有工作']
+    # print("featLabels", featLabels)
+    # # 根据 featLabels 只有两个特征值，所有测试数据给出两个值 就可以使用决策树得到最后分类结果
+    # testVec = [1, 1]  # 没房 有工作
+    # # featLabels ['有自己的房子', '有工作']
+    # result = classify(myTree, featLabels, testVec)
+    # if result == 'yes':
+    #     print('放贷')
+    # if result == 'no':
+    #     print('不放贷')
+
+    # 五、决策树的存储
+    # featLabels = []
+    # myTree = createTree(dataSet, labels, featLabels)
+    # print(myTree)
+    # storeTree(myTree, 'classifierStorage.txt')
+
+    # 读取决策树
+    tree = grabTree('classifierStorage.txt')
+    print("tree", tree)
