@@ -159,7 +159,7 @@ def chooseBestFeatureToSplit(dataSet):
             newEachFeaEnt += prob * calcuShannonEnt(subDataSet)
             # 信息增益 g(D,A) = H(D) - H(D|A)
         infoGain = baseEnt - newEachFeaEnt
-        print("第%d个特征的增益为%.3f" % (i, infoGain))  # 打印每个特征的信息增益
+        # print("第%d个特征的增益为%.3f" % (i, infoGain))  # 打印每个特征的信息增益
         if infoGain > bestInfoGain:  # 两两对比找最大值 存储 索引
             bestInfoGain = infoGain
             bestFeature = i
@@ -229,7 +229,7 @@ def createTree(dataSet, labels, featLabels):
     # count() 计算 某个值在 classList 中的个数 取第一个值，
     # 若count 这个值在classList中的个数 与 len(classList)本身长度相同 则所有数据类别全部相同
     if classList.count(classList[0]) == len(classList):  # 如果类别完全相同则停止继续划分
-        print("classList[0]", classList[0])  # 用来返回 yes  或 no 也就是最终的分类
+        # print("classList[0]", classList[0])  # 用来返回 yes  或 no 也就是最终的分类
         return classList[0]
     # dataSet[0] 第一行数据 的 列数 如果只有一个特征
     # print("len(dataSet[0])", len(dataSet[0]))
@@ -239,8 +239,9 @@ def createTree(dataSet, labels, featLabels):
     # ['年龄', '有工作', '有自己的房子', '信贷情况']  根据最优特征的索引 找到对应的 文字说明
     bestFeatLabel = labels[bestFeat]  # 最优特征的标签
     featLabels.append(bestFeatLabel)
+    print("featLabels.append",featLabels)
     myTree = {bestFeatLabel: {}}  # 根据最优特征的标签生成树 先加入根 root
-    print("myTree", myTree)
+    # print("myTree", myTree)
     del (labels[bestFeat])  # 删除已经使用特征标签
     featValues = [example[bestFeat] for example in dataSet]  # 得到训练集中所有最优特征的属性值
     # print("featValues", featValues)
@@ -252,8 +253,8 @@ def createTree(dataSet, labels, featLabels):
         # myTree[bestFeatLabel] 是个 value  同时这个value 又是个字典 然后
         # myTree[bestFeatLabel][featKey]  value中的字典中的 featKey 给它进行赋值
         myTree[bestFeatLabel][featKey] = createTree(splitDataSet(dataSet, bestFeat, featKey), labels, featLabels)
-        print("bestFeatLabel ", bestFeatLabel)
-        print("myTree[bestFeatLabel][value]  ", myTree[bestFeatLabel])
+        # print("bestFeatLabel ", bestFeatLabel)
+        # print("myTree[bestFeatLabel][value]  ", myTree[bestFeatLabel])
     return myTree
 
 
@@ -279,10 +280,10 @@ def getNumLeafs(myTree):
     # python3中myTree.keys()返回的是dict_keys,不再是list,所以不能使用myTree.keys()[0]的方法获取结点属性，
     # 可以使用list(myTree.keys())[0]
     firstStr = next(iter(myTree))
-    print("firstStr", firstStr)
+    # print("firstStr", firstStr)
     secondDict = myTree[firstStr]  # 获取下一组字典
     for key in secondDict.keys():
-        print("type(secondDict[key]).__name__ ", type(secondDict[key]).__name__)
+        # print("type(secondDict[key]).__name__ ", type(secondDict[key]).__name__)
         if type(secondDict[key]).__name__ == 'dict':  # 测试该结点是否为字典，如果不是字典，代表此结点为叶子结点
             numLeafs += getNumLeafs(secondDict[key])  # 递归 每一个字典检索一次叶子节点
         else:
@@ -370,8 +371,8 @@ Modify:
 def plotMidText(cntrPt, parentPt, txtString):
     xMid = (parentPt[0] - cntrPt[0]) / 2.0 + cntrPt[0]  # 计算标注位置 两点之间中点的坐标值计算
     yMid = (parentPt[1] - cntrPt[1]) / 2.0 + cntrPt[1]
-    print("xMid", xMid)
-    print("yMid", yMid)
+    # print("xMid", xMid)
+    # print("yMid", yMid)
     createPlot.ax1.text(xMid - 0.01, yMid - 0.01, txtString, va="center", ha="center", rotation=0)
 
 
@@ -397,7 +398,7 @@ def plotTree(myTree, parentPt, nodeTxt):
     decisionNode = dict(boxstyle="sawtooth", fc="0.8")  # 设置结点格式
     leafNode = dict(boxstyle="round4", fc="0.8")  # 设置叶结点格式
     numLeafs = getNumLeafs(myTree)  # 获取决策树叶结点数目，决定了树的宽度
-    print("numLeafs:", numLeafs)
+    # print("numLeafs:", numLeafs)
     depth = getTreeDepth(myTree)  # 获取决策树层数
     firstStr = next(iter(myTree))  # 下个字典
     cntrPt = (plotTree.xOff + (1.0 + float(numLeafs)) / 2.0 / plotTree.totalW, plotTree.yOff)  # 中心位置
@@ -444,6 +445,62 @@ def createPlot(inTree):
     plt.show()
 
 
+"""
+函数说明:使用决策树分类
+
+Parameters:
+    inputTree - 已经生成的决策树
+    featLabels - 存储选择的最优特征标签 也就是 能把全部数据进行分类的  特征标签的list
+    testVec - 测试数据列表，顺序对应最优特征标签
+Returns:
+    classLabel - 分类结果
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-07-25
+Note: 
+    ZJ learning in 2017-10-18
+"""
+
+
+def classify(inputTree, featLabels, testVec):
+    #  对 inputTree 决策树 字典形式的 进行迭代 取值 iter() 迭代器 next() 返回迭代的下一个元素的值
+    # 取出字典中第一个 根root 也就是第一个 最优特征值
+    print('inputTree', inputTree)
+    # {'有自己的房子': {0: {'有工作': {0: 'no', 1: 'yes'}}, 1: 'yes'}}
+    firstFeatKey = next(iter(inputTree))
+    # 有自己的房子
+    print('firstFeatKey', firstFeatKey)
+    # 获取 第一个特征值 key 对应的 字典
+    secondDic = inputTree[firstFeatKey]
+    # {0: {'有工作': {0: 'no', 1: 'yes'}}, 1: 'yes'}
+    print('secondDic', secondDic)
+    # 在存储选择的最优特征标签 featLabels 中找到第一个 最优特征的索引
+    featIndex = featLabels.index(firstFeatKey)
+    print('featIndex', featIndex)
+    # featIndex 0
+    # 循环遍历 secondDic 下一个字典  中的 key
+    for key in secondDic.keys():
+        # 先判断测试数据列表 testVec 在中索引为 featIndex 也就是最优特征 的元素是否等于 key
+        # key  有 0 和 1 两种
+        print('testVec[featIndex]', testVec[featIndex])
+        print('key', key)
+        # 这哥判断相当于找到所属分支 要么直接找到叶子节点 或者 找到字典
+        if testVec[featIndex] == key:
+            # 判断 key 对应的value 的类型是否还是字典 判断方法就是对比 value的 .__name__ == 'dict'
+            # 进行迭代 也就是上一层中 没有找到测试数据的分类结果 也就是没有找到叶子节点
+            if type(secondDic[key]).__name__ == 'dict':
+                classLabel = classify(secondDic[key], featLabels, testVec)
+            # 如果 secondDic[key] 对应的 value 不是字典，那么就是 yes  或 no 的分类结果 叶子节点
+            else:
+                # secondDic[key] 对应的value 不是字典 而是 叶子节点 具体的分类标签 所以取值 直接赋值给classLabel
+                # 取值结果肯定是 yes  或 no
+                classLabel = secondDic[key]
+    return classLabel
+
+
 if __name__ == '__main__':
     dataSet, labels = createDataSet()
     # shannonEnt = calcuShannonEnt(dataSet)
@@ -453,11 +510,27 @@ if __name__ == '__main__':
     # subData = splitDataSet(dataSet, 2, 0)
     # print("subData:", subData)
     # print("最优特征索引值:" + str(chooseBestFeatureToSplit(dataSet)))
-    featLabels = []
-    myTree = createTree(dataSet, labels, featLabels)
-    print(myTree)
-    print(myTree)
-    createPlot(myTree)
+    # featLabels = []
+    # myTree = createTree(dataSet, labels, featLabels)
+    # print(myTree)
+    # print(myTree)
+    # createPlot(myTree)
     # classList = ['no', 'no', 'yes', 'yes', 'no', 'no', 'no', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'no']
     # a = majorityCnt(classList)
     # print(a)
+    # 使用决策树 进行分类
+    # featLabels 在外层初始化 初始化 是空list 在进行迭代的过程中featLabels 是有新赋值的
+    # featLabels  ['有自己的房子']  ['有自己的房子', '有工作'] ，
+    # 也就是 最后 存储这两个 特征值使用这两个特征值就可以将数据全部分类完毕
+    featLabels = []
+    myTree = createTree(dataSet, labels, featLabels)
+    # featLabels ['有自己的房子', '有工作']
+    print("featLabels", featLabels)
+    # 根据 featLabels 只有两个特征值，所有测试数据给出两个值 就可以使用决策树得到最后分类结果
+    testVec = [1, 1]  # 没房 有工作
+    # featLabels ['有自己的房子', '有工作']
+    result = classify(myTree, featLabels, testVec)
+    if result == 'yes':
+        print('放贷')
+    if result == 'no':
+        print('不放贷')

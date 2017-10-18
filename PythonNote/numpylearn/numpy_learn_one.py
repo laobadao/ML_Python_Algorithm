@@ -248,5 +248,12 @@ print(labels)  # ['年龄', '有工作', '信贷情况']
 
 key1 = "iii"
 dics = {key1: {}}
-dics[key1][value] = {"ooo": {}}
+dics[key1] = {"ooo": {}}
 print(dics)  # {'iii': {'ooo': {}}}
+
+dics1 = {"key1": {"key2": {"key3": "no", "key4:": "yes"}}}
+first = next(iter(dics1))
+second = next(iter(dics1))
+print("iter(dics1)", iter(dics1)) # <dict_keyiterator object at 0x000001D6EB942278>
+print("first", first) # key1
+print("second", second)
