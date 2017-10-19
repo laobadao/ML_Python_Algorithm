@@ -1,5 +1,5 @@
 import numpy as np
-
+from functools import reduce
 """
 函数说明:创建实验样本
 侮辱类和非侮辱类，使用1和0分别表示。
@@ -26,7 +26,7 @@ def loadDataSet():
                    ['stop', 'posting', 'stupid', 'worthless', 'garbage'],
                    ['mr', 'licks', 'ate', 'my', 'steak', 'how', 'to', 'stop', 'him'],
                    ['quit', 'buying', 'worthless', 'dog', 'food', 'stupid']]
-    classVec = [0, 1, 0, 1, 0, 1]  # 类别标签向量，1代表侮辱性词汇，0代表不是
+    classVec = [0, 1, 0, 1, 0, 1]  # 类别标签向量，1代表侮辱性词汇 语句，0代表不是
     return postingList, classVec
 
 
@@ -126,20 +126,32 @@ Modify:
 
 
 def trainNB0(trainMatrix, trainCategory):
-    numTrainDocs = len(trainMatrix)  # 计算训练的文档数目
-    numWords = len(trainMatrix[0])  # 计算每篇文档的词条数
+    numTrainDocs = len(trainMatrix)  # 计算训练的文档数目 行
+    numWords = len(trainMatrix[0])  # 计算每篇文档的词条数 列
+    #  trainCategory list 中 只有 0 或1  sum 求和 则算出 包含 1 侮辱性词汇语句的 个数
     pAbusive = sum(trainCategory) / float(numTrainDocs)  # 文档属于侮辱类的概率
-    p0Num = np.zeros(numWords);
-    p1Num = np.zeros(numWords)  # 创建numpy.zeros数组,词条出现数初始化为0
-    p0Denom = 0.0;
+    p0Num = np.zeros(numWords)  # [0,0,...,0,0]
+    p1Num = np.zeros(numWords)  # 创建numpy.zeros数组,词条出现数初始化为0 [0,0,...,0,0]
+    p0Denom = 0.0
     p1Denom = 0.0  # 分母初始化为0
     for i in range(numTrainDocs):
+        # trainCategory = [0, 1, 0, 1, 0, 1]
+        # trainMatrix[i]
+        #  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
         if trainCategory[i] == 1:  # 统计属于侮辱类的条件概率所需的数据，即P(w0|1),P(w1|1),P(w2|1)···
+            # 若 trainMatrix[i] 这个 向量 数据的 标签 label 是 1  则将其加入进 p1Num 一维数组 累加
             p1Num += trainMatrix[i]
+            # sum(trainMatrix[i]) 向量求和 累加 所有是 1 的总和
             p1Denom += sum(trainMatrix[i])
         else:  # 统计属于非侮辱类的条件概率所需的数据，即P(w0|0),P(w1|0),P(w2|0)···
             p0Num += trainMatrix[i]
             p0Denom += sum(trainMatrix[i])
+    # p1Num:  [ 1.  1.  0.  1.  0.  1.  0.  0.  0.  1.  0.  1.  0.  3.  2.  0.  0.  0.
+    # 1.  0.  0.  1.  0.  1.  0.  1.  1.  2.  0.  1.  0.  0.]
+    print("p1Num:", p1Num)
+    print("p1Denom:", p1Denom)  # 19.0
+    print("p0Num: ", p0Num)
+    print("p0Denom:", p0Denom)  # 24.0
     p1Vect = p1Num / p1Denom
     p0Vect = p0Num / p0Denom
     return p0Vect, p1Vect, pAbusive  # 返回属于侮辱类的条件概率数组，属于非侮辱类的条件概率数组，文档属于侮辱类的概率
@@ -158,8 +170,9 @@ if __name__ == '__main__':
     trainMat = []
     for postinDoc in postingList:
         trainMat.append(setOfWords2Vec(myVocabList, postinDoc))
-    print('trainMat:\n', trainMat)
+    # print('trainMat:\n', trainMat)
     p0V, p1V, pAb = trainNB0(trainMat, classVec)
+    # 先制作 myVocabList  词汇表，然后
     print('p0V:\n', p0V)
     print('p1V:\n', p1V)
     print('classVec:\n', classVec)
