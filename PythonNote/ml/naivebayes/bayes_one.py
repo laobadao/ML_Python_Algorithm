@@ -182,6 +182,13 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
     print("vec2Classify", vec2Classify)
     print("p1Vec", p1Vec)
     print("pClass1", pClass1)
+    # vec2Classify [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0]
+    # p1Vec [ 0.05263158  0.          0.          0.          0.          0.          0.
+    # 0.          0.05263158  0.          0.          0.05263158  0.          0.
+    # 0.05263158  0.          0.05263158  0.05263158  0.05263158  0.
+    # 0.05263158  0.          0.          0.10526316  0.05263158  0.10526316
+    # 0.05263158  0.          0.05263158  0.05263158  0.15789474  0.        ]
+    # 两个一维数组 相乘 里面每一二个元素对应相乘
     p1 = reduce(lambda x, y: x * y, vec2Classify * p1Vec) * pClass1  # 对应元素相乘
     p0 = reduce(lambda x, y: x * y, vec2Classify * p1Vec) * (1.0 - pClass1)
     print('p0:', p0)
@@ -230,7 +237,22 @@ def testingNB():
         print(testEntry, '属于非侮辱类')  # 执行分类并打印分类结果
 
 
+"""
+reduce () lanmada
+
+"""
+
+
+def test_reduce():
+    a = np.array([1, 2, 3, 4])
+    b = np.array([0.1, 0.1, 0.1, 0.1])
+    # 0.1 *0.2 *0.3 *0.4 数组 对应元素相乘后，然后得到的数 再依次相乘
+    c = reduce(lambda x, y: x * y, a * b)
+    print(c)
+
+
 if __name__ == '__main__':
+    test_reduce()
     # postingList, classVec = loadDataSet()
     #
     # for each in postingList:
@@ -252,3 +274,16 @@ if __name__ == '__main__':
     # print('pAb:\n', pAb)
 
     testingNB()
+"""
+朴素贝叶斯推断的一些优点：
+
+生成式模型，通过计算概率来进行分类，可以用来处理多分类问题。
+对小规模的数据表现很好，适合多分类任务，适合增量式训练，算法也比较简单。
+
+朴素贝叶斯推断的一些缺点：
+
+对输入数据的表达形式很敏感。
+由于朴素贝叶斯的“朴素”特点，所以会带来一些准确率上的损失。
+需要计算先验概率，分类决策存在错误率。
+
+"""

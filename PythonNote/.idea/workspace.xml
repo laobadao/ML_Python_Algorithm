@@ -24,7 +24,7 @@
     <SUITE FILE_PATH="coverage/PythonNote$dicisionTreeOne.coverage" NAME="dicisionTreeOne Coverage Results" MODIFIED="1508298672874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ml/decisiontee" />
     <SUITE FILE_PATH="coverage/PythonNote$hello.coverage" NAME="hello Coverage Results" MODIFIED="1508205323855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/PythonNote$decision_tree_sklearn.coverage" NAME="decision_tree_sklearn Coverage Results" MODIFIED="1508319087830" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ml/decisiontee" />
-    <SUITE FILE_PATH="coverage/PythonNote$bayes_one.coverage" NAME="bayes_one Coverage Results" MODIFIED="1508393977915" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ml/naivebayes" />
+    <SUITE FILE_PATH="coverage/PythonNote$bayes_one.coverage" NAME="bayes_one Coverage Results" MODIFIED="1508394984151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ml/naivebayes" />
     <SUITE FILE_PATH="coverage/PythonNote$MLDemo.coverage" NAME="MLDemo Coverage Results" MODIFIED="1506642923543" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ml" />
     <SUITE FILE_PATH="coverage/PythonNote$numpy_learn_one.coverage" NAME="numpy_learn_one Coverage Results" MODIFIED="1508291503712" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/numpylearn" />
     <SUITE FILE_PATH="coverage/PythonNote$matrix.coverage" NAME="matrix Coverage Results" MODIFIED="1506670924692" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/algorithm" />
@@ -40,8 +40,8 @@
       <file leaf-file-name="bayes_one.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ml/naivebayes/bayes_one.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-520">
-              <caret line="219" column="40" lean-forward="false" selection-start-line="219" selection-start-column="37" selection-end-line="219" selection-end-column="40" />
+            <state relative-caret-position="220">
+              <caret line="280" column="36" lean-forward="true" selection-start-line="280" selection-start-column="36" selection-end-line="280" selection-end-column="36" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -851,8 +851,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ml/naivebayes/bayes_one.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-520">
-          <caret line="219" column="40" lean-forward="false" selection-start-line="219" selection-start-column="37" selection-end-line="219" selection-end-column="40" />
+        <state relative-caret-position="220">
+          <caret line="280" column="36" lean-forward="true" selection-start-line="280" selection-start-column="36" selection-end-line="280" selection-end-column="36" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
