@@ -1,5 +1,6 @@
 import numpy as np
 from functools import reduce
+
 """
 函数说明:创建实验样本
 侮辱类和非侮辱类，使用1和0分别表示。
@@ -148,13 +149,85 @@ def trainNB0(trainMatrix, trainCategory):
             p0Denom += sum(trainMatrix[i])
     # p1Num:  [ 1.  1.  0.  1.  0.  1.  0.  0.  0.  1.  0.  1.  0.  3.  2.  0.  0.  0.
     # 1.  0.  0.  1.  0.  1.  0.  1.  1.  2.  0.  1.  0.  0.]
-    print("p1Num:", p1Num)
-    print("p1Denom:", p1Denom)  # 19.0
-    print("p0Num: ", p0Num)
-    print("p0Denom:", p0Denom)  # 24.0
+    # print("p1Num:", p1Num)
+    # print("p1Denom:", p1Denom)  # 19.0
+    # print("p0Num: ", p0Num)
+    # print("p0Denom:", p0Denom)  # 24.0
     p1Vect = p1Num / p1Denom
     p0Vect = p0Num / p0Denom
     return p0Vect, p1Vect, pAbusive  # 返回属于侮辱类的条件概率数组，属于非侮辱类的条件概率数组，文档属于侮辱类的概率
+
+
+"""
+函数说明:朴素贝叶斯分类器分类函数
+
+Parameters:
+    vec2Classify - 待分类的词条数组
+    p0Vec - 侮辱类的条件概率数组
+    p1Vec -非侮辱类的条件概率数组
+    pClass1 - 文档属于侮辱类的概率
+Returns:
+    0 - 属于非侮辱类
+    1 - 属于侮辱类
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-08-12
+"""
+
+
+def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
+    print("vec2Classify", vec2Classify)
+    print("p1Vec", p1Vec)
+    print("pClass1", pClass1)
+    p1 = reduce(lambda x, y: x * y, vec2Classify * p1Vec) * pClass1  # 对应元素相乘
+    p0 = reduce(lambda x, y: x * y, vec2Classify * p1Vec) * (1.0 - pClass1)
+    print('p0:', p0)
+    print('p1:', p1)
+    if p1 > p0:
+        return 1
+    else:
+        return 0
+
+
+"""
+函数说明:测试朴素贝叶斯分类器
+
+Parameters:
+    无
+Returns:
+    无
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-08-12
+"""
+
+
+def testingNB():
+    listOPosts, listClasses = loadDataSet()  # 创建实验样本
+    myVocabList = createVocabList(listOPosts)  # 创建词汇表
+    trainMat = []
+    for postinDoc in listOPosts:
+        trainMat.append(setOfWords2Vec(myVocabList, postinDoc))  # 将实验样本向量化
+    p0V, p1V, pAb = trainNB0(np.array(trainMat), np.array(listClasses))  # 训练朴素贝叶斯分类器
+    testEntry = ['love', 'my', 'dalmation']  # 测试样本1
+    thisDoc = np.array(setOfWords2Vec(myVocabList, testEntry))  # 测试样本向量化
+    if classifyNB(thisDoc, p0V, p1V, pAb):
+        print(testEntry, '属于侮辱类')  # 执行分类并打印分类结果
+    else:
+        print(testEntry, '属于非侮辱类')  # 执行分类并打印分类结果
+    testEntry = ['stupid', 'garbage']  # 测试样本2
+
+    thisDoc = np.array(setOfWords2Vec(myVocabList, testEntry))  # 测试样本向量化
+    if classifyNB(thisDoc, p0V, p1V, pAb):
+        print(testEntry, '属于侮辱类')  # 执行分类并打印分类结果
+    else:
+        print(testEntry, '属于非侮辱类')  # 执行分类并打印分类结果
 
 
 if __name__ == '__main__':
@@ -164,16 +237,18 @@ if __name__ == '__main__':
     #     print(each)
     # print(classVec)
 
-    postingList, classVec = loadDataSet()
-    myVocabList = createVocabList(postingList)
-    print('myVocabList:\n', myVocabList)
-    trainMat = []
-    for postinDoc in postingList:
-        trainMat.append(setOfWords2Vec(myVocabList, postinDoc))
-    # print('trainMat:\n', trainMat)
-    p0V, p1V, pAb = trainNB0(trainMat, classVec)
-    # 先制作 myVocabList  词汇表，然后
-    print('p0V:\n', p0V)
-    print('p1V:\n', p1V)
-    print('classVec:\n', classVec)
-    print('pAb:\n', pAb)
+    # postingList, classVec = loadDataSet()
+    # myVocabList = createVocabList(postingList)
+    # print('myVocabList:\n', myVocabList)
+    # trainMat = []
+    # for postinDoc in postingList:
+    #     trainMat.append(setOfWords2Vec(myVocabList, postinDoc))
+    # # print('trainMat:\n', trainMat)
+    # p0V, p1V, pAb = trainNB0(trainMat, classVec)
+    # # 先制作 myVocabList  词汇表，然后
+    # print('p0V:\n', p0V)
+    # print('p1V:\n', p1V)
+    # print('classVec:\n', classVec)
+    # print('pAb:\n', pAb)
+
+    testingNB()
