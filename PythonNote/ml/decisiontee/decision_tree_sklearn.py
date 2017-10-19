@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     # 可视化数据
     # 创建DecisionTreeClassifier()类  最大深度限制为4
-    clf = tree.DecisionTreeClassifier(max_depth=4)
+    # clf = tree.DecisionTreeClassifier(max_depth=4)
     # 使用数据，构建决策树 取出 lenses_pd 中的 values 转化为 list
     # 传入 训练数据和类别 list
     # clf = clf.fit(lenses_pd.values.tolist(), lenses_target)
@@ -64,12 +64,39 @@ if __name__ == '__main__':
 
     clf = tree.DecisionTreeClassifier(max_depth=4)  # 创建DecisionTreeClassifier()类
     clf = clf.fit(lenses_pd.values.tolist(), lenses_target)  # 使用数据，构建决策树
-    dot_data = StringIO()
-    tree.export_graphviz(clf, out_file=dot_data,  # 绘制决策树
-                         feature_names=lenses_pd.keys(),
-                         class_names=clf.classes_,
-                         filled=True, rounded=True,
-                         special_characters=True)
-    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
-    graph.write_pdf("tree.pdf")
+    # dot_data = StringIO()
+    # tree.export_graphviz(clf, out_file=dot_data,  # 绘制决策树
+    #                      feature_names=lenses_pd.keys(),
+    #                      class_names=clf.classes_,
+    #                      filled=True, rounded=True,
+    #                      special_characters=True)
+    # graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    # graph.write_pdf("tree.pdf")
+    # 预测： ['hard'] 
+    print('预测：', clf.predict([[1, 1, 1, 0]]))
 
+
+"""七、总结
+
+决策树的一些优点：
+
+易于理解和解释。决策树可以可视化。
+几乎不需要数据预处理。其他方法经常需要数据标准化，创建虚拟变量和删除缺失值。决策树还不支持缺失值。
+使用树的花费（例如预测数据）是训练数据点(data points)数量的对数。
+可以同时处理数值变量和分类变量。其他方法大都适用于分析一种变量的集合。
+可以处理多值输出变量问题。
+使用白盒模型。如果一个情况被观察到，使用逻辑判断容易表示这种规则。
+相反，如果是黑盒模型（例如人工神经网络），结果会非常难解释。
+即使对真实模型来说，假设无效的情况下，也可以较好的适用。
+
+决策树的一些缺点：
+
+决策树学习可能创建一个过于复杂的树，并不能很好的预测数据。也就是过拟合。修剪机制（现在不支持），
+设置一个叶子节点需要的最小样本数量，或者数的最大深度，可以避免过拟合。
+决策树可能是不稳定的，因为即使非常小的变异，可能会产生一颗完全不同的树。
+这个问题通过decision trees with an ensemble来缓解。
+决策树可能是不稳定的，因为即使非常小的变异，可能会产生一颗完全不同的树。
+这个问题通过decision trees with an ensemble来缓解。
+概念难以学习，因为决策树没有很好的解释他们，例如，XOR, parity or multiplexer problems。
+如果某些分类占优势，决策树将会创建一棵有偏差的树。因此，建议在训练之前，先抽样使样本均衡。
+"""
