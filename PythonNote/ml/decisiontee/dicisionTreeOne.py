@@ -462,7 +462,7 @@ Blog:
 Modify:
     2017-07-25
 Note: 
-    ZJ learning in 2017-10-18
+    ZJ studied in 2017-10-18
 """
 
 
@@ -541,7 +541,7 @@ Blog:
 Modify:
     2017-07-25
 Note: 
-    ZJ learning in 2017-10-18
+    ZJ studied in 2017-10-18
 """
 
 
