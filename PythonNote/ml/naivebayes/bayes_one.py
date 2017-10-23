@@ -190,7 +190,7 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
     # 0.05263158  0.          0.05263158  0.05263158  0.15789474  0.        ]
     # 两个一维数组 相乘 里面每一二个元素对应相乘
     p1 = reduce(lambda x, y: x * y, vec2Classify * p1Vec) * pClass1  # 对应元素相乘
-    p0 = reduce(lambda x, y: x * y, vec2Classify * p1Vec) * (1.0 - pClass1)
+    p0 = reduce(lambda x, y: x * y, vec2Classify * p0Vec) * (1.0 - pClass1)
     print('p0:', p0)
     print('p1:', p1)
     if p1 > p0:

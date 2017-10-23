@@ -39,11 +39,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="naive_bayes_sina.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="bayes_one.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ml/naivebayes/bayes_one.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="351">
+              <caret line="29" column="48" lean-forward="false" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="naive_bayes_sina.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ml/naivebayes/naive_bayes_sina.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="139" column="36" lean-forward="true" selection-start-line="139" selection-start-column="36" selection-end-line="139" selection-end-column="36" />
+            <state relative-caret-position="304">
+              <caret line="143" column="0" lean-forward="true" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -96,11 +106,11 @@
         <option value="D:/Program Files/Python36/Lib/site-packages/pydotplus/graphviz.py" />
         <option value="$PROJECT_DIR$/ml/decisiontee/decision_tree_sklearn.py" />
         <option value="$PROJECT_DIR$/ml/decisiontee/dicisionTreeOne.py" />
-        <option value="$PROJECT_DIR$/ml/naivebayes/bayes_one.py" />
         <option value="$PROJECT_DIR$/numpylearn/numpy_learn_one.py" />
         <option value="$PROJECT_DIR$/ml/naivebayes/naive_bayes_modify.py" />
         <option value="$PROJECT_DIR$/ml/naivebayes/email/ham/23.txt" />
         <option value="$PROJECT_DIR$/ml/naivebayes/naive_bayes_sina.py" />
+        <option value="$PROJECT_DIR$/ml/naivebayes/bayes_one.py" />
       </list>
     </option>
   </component>
@@ -791,16 +801,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ml/naivebayes/bayes_one.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="384" column="20" lean-forward="true" selection-start-line="384" selection-start-column="20" selection-end-line="384" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ml/naivebayes/email/spam/1.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="81">
@@ -845,11 +845,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ml/naivebayes/naive_bayes_sina.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="139" column="36" lean-forward="true" selection-start-line="139" selection-start-column="36" selection-end-line="139" selection-end-column="36" />
+        <state relative-caret-position="304">
+          <caret line="143" column="0" lean-forward="true" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ml/naivebayes/bayes_one.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="29" column="48" lean-forward="false" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
+          <folding />
         </state>
       </provider>
     </entry>
