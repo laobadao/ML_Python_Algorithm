@@ -27,7 +27,7 @@ Note:
 """
 
 
-def TextProcessing(folder_path):
+def TextProcessing(folder_path, test_size=0.2):
     # 查看folder_path下的文件夹  遍历所有文件夹名称加入到 folder_list
     folder_list = os.listdir(folder_path)
     # ['C000008', 'C000010', 'C000013', 'C000014', 'C000016', 'C000020', 'C000022', 'C000023', 'C000024']
@@ -46,12 +46,6 @@ def TextProcessing(folder_path):
         # 存放子文件夹下的txt文件的列表
         files = os.listdir(new_folder_path)
         # print(files)
-        # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
-        # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
-        # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
-        # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
-        # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
-        # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
         # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
         # ['10.txt', '11.txt', '12.txt', '13.txt', '14.txt', '15.txt', '16.txt', '17.txt', '18.txt', '19.txt']
         # 存放子文件夹下的txt文件的列表j = 1
@@ -73,8 +67,38 @@ def TextProcessing(folder_path):
             # folder= C000010  ...每個 folder 代表一种类型
             class_list.append(folder)
             j += 1
-        # print(data_list)
-        # print(class_list)
+            # print(data_list)
+            # print(class_list)
+
+    # x = [1, 2, 3]
+    # y = [4, 5, 6]
+    # z = [7, 8, 9]
+    # xyz = zip(x, y, z)
+    # print(xyz)  [(1, 4, 7), (2, 5, 8), (3, 6, 9)] 三个list  列方向上 每一个 索引 对应进行组合
+    data_class_list = list(zip(data_list, class_list))  # zip压缩合并，将数据与标签对应压缩
+    # print('data_class_list', data_class_list)
+    random.shuffle(data_class_list)  # 将data_class_list乱序
+    index = int(len(data_class_list) * test_size) + 1  # 训练集和测试集切分的索引值
+    # [index:] 从该索引位置开始 到最后 区间的数据
+    train_list = data_class_list[index:]  # 训练集
+    # [:index] 从0 开始 到该索引，不包括 该 index 的数据
+    test_list = data_class_list[:index]  # 测试集
+    train_data_list, train_class_list = zip(*train_list)  # 训练集解压缩
+    test_data_list, test_class_list = zip(*test_list)  # 测试集解压缩
+
+    all_words_dict = {}  # 统计训练集词频
+    for word_list in train_data_list:
+        for word in word_list:
+            if word in all_words_dict.keys():
+                all_words_dict[word] += 1
+            else:
+                all_words_dict[word] = 1
+
+    # 根据键的值倒序排序
+    all_words_tuple_list = sorted(all_words_dict.items(), key=lambda f: f[1], reverse=True)
+    all_words_list, all_words_nums = zip(*all_words_tuple_list)  # 解压缩
+    all_words_list = list(all_words_list)  # 转换成列表
+    return all_words_list, train_data_list, test_data_list, train_class_list, test_class_list
 
 
 if __name__ == '__main__':
