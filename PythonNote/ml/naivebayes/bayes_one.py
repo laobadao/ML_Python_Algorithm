@@ -202,6 +202,8 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
 """
 函数说明:测试朴素贝叶斯分类器
 
+注：该方法中，由于 0 的影响，导致 概率整体为 0，以及下溢出 的问题，影响最后结果，导致结局不准确。
+
 Parameters:
     无
 Returns:
@@ -235,6 +237,48 @@ def testingNB():
         print(testEntry, '属于侮辱类')  # 执行分类并打印分类结果
     else:
         print(testEntry, '属于非侮辱类')  # 执行分类并打印分类结果
+
+
+"""
+函数说明:朴素贝叶斯分类器训练函数
+
+注：为了解决是数据中0 的问题，以及下溢出，导致的结果输出错误，对数据进行修改，采用拉普拉斯平滑， 也叫加1 平滑，
+ 分子初始化为 1，分母初始化为 2.
+
+Parameters:
+    trainMatrix - 训练文档矩阵，即setOfWords2Vec返回的returnVec构成的矩阵
+    trainCategory - 训练类别标签向量，即loadDataSet返回的classVec
+Returns:
+    p0Vect - 侮辱类的条件概率数组
+    p1Vect - 非侮辱类的条件概率数组
+    pAbusive - 文档属于侮辱类的概率
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-08-12
+"""
+
+
+def trainNB0(trainMatrix, trainCategory):
+    numTrainDocs = len(trainMatrix)  # 计算训练的文档数目
+    numWords = len(trainMatrix[0])  # 计算每篇文档的词条数
+    pAbusive = sum(trainCategory) / float(numTrainDocs)  # 文档属于侮辱类的概率
+    p0Num = np.ones(numWords)
+    p1Num = np.ones(numWords)  # 创建numpy.ones数组,词条出现数初始化为1，拉普拉斯平滑
+    p0Denom = 2.0
+    p1Denom = 2.0  # 分母初始化为2,拉普拉斯平滑
+    for i in range(numTrainDocs):
+        if trainCategory[i] == 1:  # 统计属于侮辱类的条件概率所需的数据，即P(w0|1),P(w1|1),P(w2|1)···
+            p1Num += trainMatrix[i]
+            p1Denom += sum(trainMatrix[i])
+        else:  # 统计属于非侮辱类的条件概率所需的数据，即P(w0|0),P(w1|0),P(w2|0)···
+            p0Num += trainMatrix[i]
+            p0Denom += sum(trainMatrix[i])
+    p1Vect = np.log(p1Num / p1Denom)  # 取对数，防止下溢出
+    p0Vect = np.log(p0Num / p0Denom)
+    return p0Vect, p1Vect, pAbusive  # 返回属于侮辱类的条件概率数组，属于非侮辱类的条件概率数组，文档属于侮辱类的概率
 
 
 """
