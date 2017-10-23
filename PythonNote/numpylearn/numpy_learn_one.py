@@ -257,3 +257,8 @@ second = next(iter(dics1))
 print("iter(dics1)", iter(dics1)) # <dict_keyiterator object at 0x000001D6EB942278>
 print("first", first) # key1
 print("second", second)
+
+range1 = range(50)
+print(range1)
+print(list(range1))
+# [0,1,2...,49]
