@@ -200,6 +200,43 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
 
 
 """
+函数说明:朴素贝叶斯分类器分类函数
+
+Parameters:
+    vec2Classify - 待分类的词条数组
+    p0Vec - 侮辱类的条件概率数组
+    p1Vec -非侮辱类的条件概率数组
+    pClass1 - 文档属于侮辱类的概率
+Returns:
+    0 - 属于非侮辱类
+    1 - 属于侮辱类
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-08-12
+"""
+
+
+def classifyNB1(vec2Classify, p0Vec, p1Vec, pClass1):
+    # 在 trainNB1 () 中 ，
+    # p1Vect = np.log(p1Num / p1Denom)  # 取对数，防止下溢出
+    # p0Vect = np.log(p0Num / p0Denom)
+    # 对应元素相乘。logA * B = logA + logB，所以这里加上log(pClass1)
+    # 因为在 trainNB1 () 中都是取的自然对数，所以 相乘 在这里 对应相加
+    #  p1 = reduce(lambda x, y: x * y, vec2Classify * p1Vec) * pClass1
+    # p1 = np.log( vec2Classify * p1Vec * pClass1 ) = np.log( vec2Classify * p1Vec) + np.log(pClass1)
+    #  = sum(vec2Classify * p1Vec) + np.log(pClass1)
+    p1 = sum(vec2Classify * p1Vec) + np.log(pClass1)
+    p0 = sum(vec2Classify * p0Vec) + np.log(1.0 - pClass1)
+    if p1 > p0:
+        return 1
+    else:
+        return 0
+
+
+"""
 函数说明:测试朴素贝叶斯分类器
 
 注：该方法中，由于 0 的影响，导致 概率整体为 0，以及下溢出 的问题，影响最后结果，导致结局不准确。
@@ -226,14 +263,14 @@ def testingNB():
     p0V, p1V, pAb = trainNB0(np.array(trainMat), np.array(listClasses))  # 训练朴素贝叶斯分类器
     testEntry = ['love', 'my', 'dalmation']  # 测试样本1
     thisDoc = np.array(setOfWords2Vec(myVocabList, testEntry))  # 测试样本向量化
-    if classifyNB(thisDoc, p0V, p1V, pAb):
+    if classifyNB1(thisDoc, p0V, p1V, pAb):
         print(testEntry, '属于侮辱类')  # 执行分类并打印分类结果
     else:
         print(testEntry, '属于非侮辱类')  # 执行分类并打印分类结果
     testEntry = ['stupid', 'garbage']  # 测试样本2
 
     thisDoc = np.array(setOfWords2Vec(myVocabList, testEntry))  # 测试样本向量化
-    if classifyNB(thisDoc, p0V, p1V, pAb):
+    if classifyNB1(thisDoc, p0V, p1V, pAb):
         print(testEntry, '属于侮辱类')  # 执行分类并打印分类结果
     else:
         print(testEntry, '属于非侮辱类')  # 执行分类并打印分类结果
@@ -258,13 +295,32 @@ Blog:
     http://blog.csdn.net/c406495762
 Modify:
     2017-08-12
+Note:
+    ZJ studied in 2017-10-23.
 """
 
 
-def trainNB0(trainMatrix, trainCategory):
-    numTrainDocs = len(trainMatrix)  # 计算训练的文档数目
-    numWords = len(trainMatrix[0])  # 计算每篇文档的词条数
+# 从上图可以看出，在计算的时候已经出现了概率为0的情况。如果新实例文本，包含这种概率为0的分词，
+# 那么最终的文本属于某个类别的概率也就是0了。显然，这样是不合理的，为了降低这种影响，可以将所有词的出现数初始化为1，
+# 并将分母初始化为2。这种做法就叫做拉普拉斯平滑(Laplace Smoothing)又被称为加1平滑，是比较常用的平滑方法，
+# 它就是为了解决0概率问题。
+#
+# 除此之外，另外一个遇到的问题就是下溢出，这是由于太多很小的数相乘造成的。
+# 学过数学的人都知道，两个小数相乘，越乘越小，这样就造成了下溢出。在程序中，
+# 在相应小数位置进行四舍五入，计算结果可能就变成0了。为了解决这个问题，对乘积结果取自然对数。
+# 通过求对数可以避免下溢出或者浮点数舍入导致的错误。同时，采用自然对数进行处理不会有任何损失。
+# 下图给出函数f(x)和ln(f(x))的曲线。
+
+
+def trainNB1(trainMatrix, trainCategory):
+    numTrainDocs = len(trainMatrix)  # 计算训练的文档数目 行数
+    numWords = len(trainMatrix[0])  # 计算每篇文档的词条数 列数
+    # trainCategory 是 对所有的文档 进行标记，1 侮辱 0  非侮辱 ，
+    # sum(trainCategory) 是 trainCategory  中 所有元素相加
+    #  相当于 所有的 1 相加，也就是 1 所占 的总个数 再除以 float(numTrainDocs)  总数，就是 侮辱类的概率
     pAbusive = sum(trainCategory) / float(numTrainDocs)  # 文档属于侮辱类的概率
+    # 下面4 行 与 trainNB0（）方法中相比，则是 采用了 拉普拉斯平滑 ， 分子 初始化 为 1 ，分母初始化 为 2
+    #  上面 trainNB0（） 中创建的 np.zeros(numWords) 0 矩阵 ，这里创建的是 1 矩阵
     p0Num = np.ones(numWords)
     p1Num = np.ones(numWords)  # 创建numpy.ones数组,词条出现数初始化为1，拉普拉斯平滑
     p0Denom = 2.0
@@ -310,14 +366,18 @@ if __name__ == '__main__':
     # for postinDoc in postingList:
     #     trainMat.append(setOfWords2Vec(myVocabList, postinDoc))
     # # print('trainMat:\n', trainMat)
-    # p0V, p1V, pAb = trainNB0(trainMat, classVec)
+    # p0V, p1V, pAb = trainNB1(trainMat, classVec)
     # # 先制作 myVocabList  词汇表，然后
     # print('p0V:\n', p0V)
     # print('p1V:\n', p1V)
     # print('classVec:\n', classVec)
     # print('pAb:\n', pAb)
 
+    # 测试分类，将输入 语句 进行分类，是否为 侮辱性 语句，在 修改 trainNB1 和 classifyNB1 () 后，结果正确。
     testingNB()
+    # ['love', 'my', 'dalmation'] 属于非侮辱类
+    # ['stupid', 'garbage'] 属于侮辱类
+
 """
 朴素贝叶斯推断的一些优点：
 
