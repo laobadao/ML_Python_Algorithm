@@ -190,7 +190,8 @@ def TextFeatures(train_data_list, test_data_list, feature_words):
 
 Parameters:
     all_words_list - 训练集所有文本列表
-    deleteN - 删除词频最高的 deleteN 个词 int 型 给出要删除的个数
+    deleteN - 删除词频最高的 deleteN 个词 int 型 给出要删除的个数， 因为all_words_list 是按降序排序的 list  q,
+    前面 最靠前的 比如 400 个 都是些无用词 如 ， 。 了 好 等，先把这些词去除掉，在从剩下的词中选取 特征词
     stopwords_set - 指定的结束语 是 MakeWordsSet（）方法中的返回结果 读取的内容的 set 集合 
 Returns:
     feature_words - 特征集
