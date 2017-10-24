@@ -143,6 +143,47 @@ def MakeWordsSet(word_file):
 
 
 """
+函数说明:根据feature_words将文本向量化
+
+Parameters:
+    train_data_list - 训练集
+    test_data_list - 测试集
+    feature_words - 特征集
+Returns:
+    train_feature_list - 训练集向量化列表
+    test_feature_list - 测试集向量化列表
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-08-22
+"""
+
+
+def TextFeatures(train_data_list, test_data_list, feature_words):
+    def text_features(text, feature_words):  # 出现在特征集中，则置1
+        text_words = set(text)
+        features = [1 if word in text_words else 0 for word in feature_words]
+        return features
+
+    train_feature_list = [text_features(text, feature_words) for text in train_data_list]
+    test_feature_list = [text_features(text, feature_words) for text in test_data_list]
+    return train_feature_list, test_feature_list  # 返回结果
+
+
+# def TextFeatures1(train_data_list, test_data_list, feature_words):
+#     def text_features(text, feature_words):
+#         text_words = set(text)
+#         features = [1 if word in text_words else 0 for word in feature_words]
+#         return features
+#
+#     train_feature_list = [text_features(text, feature_words) for text in train_data_list]
+#     test_feature_list = [text_features(text, feature_words) for text in test_data_list]
+#     return train_feature_list, test_feature_list
+
+
+"""
 函数说明:文本特征选取 特征词选取
 
 也就是滤除那些没有用的词组，如 了  在 吗 ？ ， 等返回的 feature_words 就是我们最终选出的用于新闻分类的特征
@@ -169,14 +210,41 @@ def words_dict(all_words_list, deleteN, stopwords_set=set()):
     # 从 deleteN 到 len(all_words_list) 不包含 len(all_words_list) 间隔 1
     for t in range(deleteN, len(all_words_list), 1):
         if n > 1000:  # feature_words的维度为1000
-            break    
-        # 如果这个词不是数字，并且不是指定的结束语，并且单词长度大于1小于5，那么这个词就可以作为特征词
+            break
+            # 如果这个词不是数字，并且不是指定的结束语，并且单词长度大于1小于5，那么这个词就可以作为特征词
         # not isdigit()  不是数字 
         if not all_words_list[t].isdigit() and all_words_list[t] not in stopwords_set and 1 < len(
                 all_words_list[t]) < 5:
             feature_words.append(all_words_list[t])
         n += 1
     return feature_words
+
+
+"""
+函数说明:新闻分类器
+
+Parameters:
+    train_feature_list - 训练集向量化的特征文本
+    test_feature_list - 测试集向量化的特征文本
+    train_class_list - 训练集分类标签
+    test_class_list - 测试集分类标签
+Returns:
+    test_accuracy - 分类器精度
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Modify:
+    2017-08-22
+Note:
+    ZJ studied in 2017-10-24
+"""
+
+
+def TextClassifier(train_feature_list, test_feature_list, train_class_list, test_class_list):
+    classifier = MultinomialNB().fit(train_feature_list, train_class_list)
+    test_accuracy = classifier.score(test_feature_list, test_class_list)
+    return test_accuracy
 
 
 if __name__ == '__main__':
@@ -186,9 +254,38 @@ if __name__ == '__main__':
                                                                                                         test_size=0.2)
     # print(all_words_list)
 
-    #生成stopwords_set
+    # 生成stopwords_set
     stopwords_file = './stopwords_cn.txt'
     stopwords_set = MakeWordsSet(stopwords_file)
 
-    feature_words = words_dict(all_words_list, 100, stopwords_set)
-    print(feature_words)
+    # feature_words = words_dict(all_words_list, 100, stopwords_set)
+    # print(feature_words)
+
+    # test_accuracy_list = []
+    # # 从 0 到 1000 每20 个间隔 不包含1000 选取不同的 deleteN 与分类器 精度（准确率）之间的关系
+    # deleteNs = range(0, 1000, 20)  # 0 20 40 60 ... 980
+    # for deleteN in deleteNs:
+    #     feature_words = words_dict(all_words_list, deleteN)
+    #     train_feature_list, test_feature_list = TextFeatures(train_data_list, test_data_list,feature_words)
+    #     test_accuracy = TextClassifier(train_feature_list,test_feature_list,train_class_list,test_class_list)
+    #     test_accuracy_list.append(test_accuracy)
+
+    # plt.figure()
+    # plt.plot(deleteNs,test_accuracy_list)
+    # plt.title('Relationship of deleteNs and test_accuracy')
+    # plt.xlabel('deleteNs')
+    # plt.ylabel('test_accuracy')
+    # plt.show()
+
+    #  上面这段代码 为了找出 合适的 deleteN 的值 运行了 4 次 根据图的 比较 选取 400 这个值 
+    # deleteN 选取 400 时 ，精准度的值 都较高
+
+    test_accuracy_list = []
+    feature_words = words_dict(all_words_list, 400, stopwords_set)
+    train_feature_list, test_feature_list = TextFeatures(train_data_list, test_data_list, feature_words)
+    test_accuracy = TextClassifier(train_feature_list, test_feature_list, train_class_list, test_class_list)
+    test_accuracy_list.append(test_accuracy)
+    ave = lambda c: sum(c) / len(c)
+
+    print(ave(test_accuracy_list))
+    # 0.789473684211
