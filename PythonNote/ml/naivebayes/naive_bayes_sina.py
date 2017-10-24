@@ -143,12 +143,14 @@ def MakeWordsSet(word_file):
 
 
 """
-函数说明:文本特征选取
+函数说明:文本特征选取 特征词选取
+
+也就是滤除那些没有用的词组，如 了  在 吗 ？ ， 等返回的 feature_words 就是我们最终选出的用于新闻分类的特征
 
 Parameters:
     all_words_list - 训练集所有文本列表
-    deleteN - 删除词频最高的deleteN个词
-    stopwords_set - 指定的结束语
+    deleteN - 删除词频最高的 deleteN 个词 int 型 给出要删除的个数
+    stopwords_set - 指定的结束语 是 MakeWordsSet（）方法中的返回结果 读取的内容的 set 集合 
 Returns:
     feature_words - 特征集
 Author:
@@ -163,10 +165,13 @@ Modify:
 def words_dict(all_words_list, deleteN, stopwords_set=set()):
     feature_words = []  # 特征列表
     n = 1
+    # range(1,5,2) #代表从1到5，间隔2(不包含5) 
+    # 从 deleteN 到 len(all_words_list) 不包含 len(all_words_list) 间隔 1
     for t in range(deleteN, len(all_words_list), 1):
         if n > 1000:  # feature_words的维度为1000
-            break
-            # 如果这个词不是数字，并且不是指定的结束语，并且单词长度大于1小于5，那么这个词就可以作为特征词
+            break    
+        # 如果这个词不是数字，并且不是指定的结束语，并且单词长度大于1小于5，那么这个词就可以作为特征词
+        # not isdigit()  不是数字 
         if not all_words_list[t].isdigit() and all_words_list[t] not in stopwords_set and 1 < len(
                 all_words_list[t]) < 5:
             feature_words.append(all_words_list[t])
@@ -179,4 +184,11 @@ if __name__ == '__main__':
     folder_path = './SogouC/Sample'  # 训练集存放地址
     all_words_list, train_data_list, test_data_list, train_class_list, test_class_list = TextProcessing(folder_path,
                                                                                                         test_size=0.2)
-    print(all_words_list)
+    # print(all_words_list)
+
+    #生成stopwords_set
+    stopwords_file = './stopwords_cn.txt'
+    stopwords_set = MakeWordsSet(stopwords_file)
+
+    feature_words = words_dict(all_words_list, 100, stopwords_set)
+    print(feature_words)
