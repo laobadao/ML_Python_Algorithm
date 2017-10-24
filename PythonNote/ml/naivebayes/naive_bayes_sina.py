@@ -202,7 +202,7 @@ Modify:
     2017-08-22
 """
 
-
+# all_words_list 已经是 按降序排的 list 特征词 出现频度 最高的 在前面
 def words_dict(all_words_list, deleteN, stopwords_set=set()):
     feature_words = []  # 特征列表
     n = 1
@@ -286,6 +286,14 @@ if __name__ == '__main__':
     test_accuracy = TextClassifier(train_feature_list, test_feature_list, train_class_list, test_class_list)
     test_accuracy_list.append(test_accuracy)
     ave = lambda c: sum(c) / len(c)
-
     print(ave(test_accuracy_list))
+
     # 0.789473684211
+    # 也就是 给出的所有数据中 ，取出 20% 作为 测试数据 80% 为训练数据， 使用 朴素贝叶斯算法 训练 训练数据，
+    # 然后 再使用测试数据 去使用 该分类算法，并且 跟 实际上 测试数据所属分类 做比较  0.789473684211 是准确率 
+    # 也就是 这个分类算法的 准确率 有 80% 这么高
+# 总结：
+# 在训练朴素贝叶斯分类器之前，要处理好训练集，文本的清洗还是有很多需要学习的东西。
+# 根据提取的分类特征将文本向量化，然后训练朴素贝叶斯分类器。
+# 去高频词汇数量的不同，对结果也是有影响的的。
+# 拉普拉斯平滑对于改善朴素贝叶斯分类器的分类效果有着积极的作用。

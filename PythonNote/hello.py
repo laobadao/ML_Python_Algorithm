@@ -29,9 +29,6 @@ print(r' \\\\'' 都是注意 转义 all of them')
 
 #  记个额外 pip 升级的 命令 pip3 install --upgrade matplotlib
 
+a = '我去'
 
-
-
-
-
-
+print("我去", len(a))  # 2
