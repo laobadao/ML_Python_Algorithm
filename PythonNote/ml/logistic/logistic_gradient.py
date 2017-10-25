@@ -248,10 +248,21 @@ def plotBestFit(weights):
     ax = fig.add_subplot(111)  # 添加subplot
     ax.scatter(xcord1, ycord1, s=20, c='red', alpha=.5)  # 绘制正样本
     ax.scatter(xcord2, ycord2, s=20, c='green', alpha=.5)  # 绘制负样本
-	# weights 是前面求出来的回归系数 arange(-3.0, 3.0, 0.1) 区间 从-3 到3 间隔 0.1
+    # weights 是前面求出来的回归系数 arange(-3.0, 3.0, 0.1) 区间 从-3 到3 间隔 0.1
     x = np.arange(-3.0, 3.0, 0.1)
-    # ？？？ 干嘛的？
+
+    # 处设置了 sigmoid 函数为0。-《机器学习实战》
+    # 回忆5.2节，0是两个分类（类别1和类别0）的分界处。
+    # 因此，我们设定 0 = w0x0 + w1x1 + w2x2，
+    # 然后解出X2和X1的关系式（即分隔线的方程，注意X0＝1）。
+    # 相当于 X2是 Y ，然后就是 y 对 x 的关系式
+    # 对于为什么要把 x2 当y,看 画图那 就是这样的,横轴是 x1 ，也是数据矩阵里索引为[1] 的数据
+    # 纵轴 是 数据矩阵里 索引为 [2] 的数据
+    # 0 = w0x0 + w1x1 + w2x2，  x0=1
+    # 0 = w0 + w1x1 + w2x2
+    # x2 =(w0 + w1x1 )/w2
     y = (-weights[0] - weights[1] * x) / weights[2]
+
     ax.plot(x, y)
 
     plt.title('BestFit')  # 绘制title
