@@ -43,31 +43,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="logistic_gradient.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="logistic_gradient.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ml/logistic/logistic_gradient.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="158" column="12" lean-forward="false" selection-start-line="158" selection-start-column="12" selection-end-line="158" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="_axes.py" pinned="false" current-in-tab="true">
-        <entry file="file://D:/Program Files/Python36/Lib/site-packages/matplotlib/axes/_axes.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-189">
-              <caret line="3889" column="8" lean-forward="false" selection-start-line="3889" selection-start-column="8" selection-end-line="3893" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="artist.py" pinned="false" current-in-tab="false">
-        <entry file="file://D:/Program Files/Python36/Lib/site-packages/matplotlib/artist.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="314">
-              <caret line="834" column="26" lean-forward="false" selection-start-line="834" selection-start-column="22" selection-end-line="834" selection-end-column="26" />
+            <state relative-caret-position="-246">
+              <caret line="256" column="20" lean-forward="true" selection-start-line="256" selection-start-column="20" selection-end-line="256" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -830,18 +810,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ml/logistic/logistic_gradient.py">
+    <entry file="file://D:/Program Files/Python36/Lib/site-packages/matplotlib/axes/_axes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="158" column="12" lean-forward="false" selection-start-line="158" selection-start-column="12" selection-end-line="158" selection-end-column="12" />
+        <state relative-caret-position="216">
+          <caret line="3904" column="0" lean-forward="true" selection-start-line="3904" selection-start-column="0" selection-end-line="3904" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Program Files/Python36/Lib/site-packages/matplotlib/axes/_axes.py">
+    <entry file="file://$PROJECT_DIR$/ml/logistic/logistic_gradient.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-189">
-          <caret line="3889" column="8" lean-forward="false" selection-start-line="3889" selection-start-column="8" selection-end-line="3893" selection-end-column="19" />
+        <state relative-caret-position="-246">
+          <caret line="256" column="20" lean-forward="true" selection-start-line="256" selection-start-column="20" selection-end-line="256" selection-end-column="20" />
           <folding />
         </state>
       </provider>
