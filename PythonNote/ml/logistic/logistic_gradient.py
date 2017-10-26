@@ -472,7 +472,8 @@ def plotWeights(weights_array1, weights_array2):
     # 当 nrow=3, nclos=2时,代表 fig 画布被分为六个区域,axs[0][0]表示第一行第一列
     fig, axs = plt.subplots(nrows=3, ncols=2, sharex=False, sharey=False, figsize=(20, 10))
     x1 = np.arange(0, len(weights_array1), 1)
-    # 绘制 w0 与迭代次数的关系
+    # weights_array1 [[w0,w1,w2],[w0,w1,w2],[w0,w1,w2],[w0,w1,w2],[w0,w1,w2]]
+    # 绘制 w0 与迭代次数的关系 weights_array1[:, 0] 第 0 列 所有行 也就是 所有的  w0
     axs[0][0].plot(x1, weights_array1[:, 0])
     axs0_title_text = axs[0][0].set_title(u'梯度上升算法：回归系数与迭代次数关系', FontProperties=font)
     axs0_ylabel_text = axs[0][0].set_ylabel(u'W0', FontProperties=font)
@@ -488,7 +489,7 @@ def plotWeights(weights_array1, weights_array2):
     axs2_ylabel_text = axs[2][0].set_ylabel(u'W1', FontProperties=font)
     plt.setp(axs2_xlabel_text, size=20, weight='bold', color='black')
     plt.setp(axs2_ylabel_text, size=20, weight='bold', color='black')
-
+    # x 轴上画的是 从 0 到  len(weights_array2)  间隔 1
     x2 = np.arange(0, len(weights_array2), 1)
     # 绘制w0与迭代次数的关系
     axs[0][1].plot(x2, weights_array2[:, 0])
@@ -508,6 +509,13 @@ def plotWeights(weights_array1, weights_array2):
     plt.setp(axs2_ylabel_text, size=20, weight='bold', color='black')
 
     plt.show()
+# 由于改进的随机梯度上升算法，随机选取样本点，所以每次的运行结果是不同的。
+# 但是大体趋势是一样的。我们改进的随机梯度上升算法收敛效果更好。
+# 为什么这么说呢？让我们分析一下。我们一共有100个样本点，改进的随机梯度上升算法迭代次数为150。
+# 而上图显示15000次迭代次数的原因是，使用一次样本就更新一下回归系数。
+# 因此，迭代150次，相当于更新回归系数150*100=15000次。简而言之，迭代150次，更新1.5万次回归参数。
+# 从上图左侧的改进随机梯度上升算法回归效果中可以看出，其实在更新2000次回归系数的时候，已经收敛了。
+# 相当于遍历整个数据集20次的时候，回归系数已收敛。训练已完成。
 
 
 if __name__ == '__main__':
