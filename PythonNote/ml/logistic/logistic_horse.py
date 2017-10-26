@@ -193,6 +193,54 @@ def colicTest1():
 
 
 """
+函数说明:使用Sklearn构建Logistic回归分类器
+
+Parameters:
+    无
+Returns:
+    无
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Zhihu:
+    https://www.zhihu.com/people/Jack--Cui/
+Modify:
+    2017-09-05
+"""
+
+
+def colicSklearn():
+    frTrain = open('horseColicTraining.txt')  # 打开训练集
+    frTest = open('horseColicTest.txt')  # 打开测试集
+    trainingSet = []
+    trainingLabels = []
+    testSet = []
+    testLabels = []
+    for line in frTrain.readlines():
+        currLine = line.strip().split('\t')
+        lineArr = []
+        for i in range(len(currLine) - 1):
+            lineArr.append(float(currLine[i]))
+        trainingSet.append(lineArr)
+        trainingLabels.append(float(currLine[-1]))
+    for line in frTest.readlines():
+        currLine = line.strip().split('\t')
+        lineArr = []
+        for i in range(len(currLine) - 1):
+            lineArr.append(float(currLine[i]))
+        testSet.append(lineArr)
+        testLabels.append(float(currLine[-1]))
+    # liblinear 适用于小数据集，而 sag 和 saga 适用于大数据集因为速度更快。
+    #  solver 算法选择 liblinear max_iter=10 迭代次数
+    # classifier = LogisticRegression(solver='liblinear', max_iter=10).fit(trainingSet, trainingLabels)
+    # solver='sag', max_iter=5000 适合数据量大
+    classifier = LogisticRegression(solver='sag', max_iter=5000).fit(trainingSet, trainingLabels)
+    test_accurcy = classifier.score(testSet, testLabels) * 100
+    print('正确率:%f%%' % test_accurcy)
+
+
+"""
 函数说明:分类函数
 
 Parameters:
@@ -225,11 +273,32 @@ def logistic_function(x):
 
 
 if __name__ == '__main__':
-    colicTest()
+    # colicTest()
     # 35.82%
-    colicTest1()
+    # colicTest1()
     # 28.36%
 
     # 结论：
     # 当数据集较小时，我们使用梯度上升算法
     # 当数据集较大时，我们使用改进的随机梯度上升算法
+
+    # sklearn logistic 
+    colicSklearn()
+    # 正确率:73.134328%
+
+    # 1、Logistic回归的优缺点
+    #
+    # 优点：
+    #
+    # 实现简单，易于理解和实现；计算代价不高，速度很快，存储资源低。
+    # 缺点：
+    #
+    # 容易欠拟合，分类精度可能不高。
+    # 2、其他
+    #
+    # Logistic回归的目的是寻找一个非线性函数Sigmoid的最佳拟合参数，求解过程可以由最优化算法完成。
+    # 改进的一些最优化算法，比如sag。它可以在新数据到来时就完成参数更新，而不需要重新读取整个数据集来进行批量处理。
+
+    # 机器学习的一个重要问题就是如何处理缺失数据。
+    # 这个问题没有标准答案，取决于实际应用中的需求。现有一些解决方案，每种方案都各有优缺点。
+    # 我们需要根据数据的情况，这是Sklearn的参数，以期达到更好的分类效果。
