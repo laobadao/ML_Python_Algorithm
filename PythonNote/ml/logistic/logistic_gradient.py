@@ -183,14 +183,14 @@ def gradAscent1(dataMatIn, classLabels):
     maxCycles = 500  # 最大迭代次数
     weights = np.ones((n, 1))
     weights_array = np.array([])
-    print("weights_array",weights_array)
+    # print("weights_array",weights_array)
     for k in range(maxCycles):
         h = sigmoid(dataMatrix * weights)  # 梯度上升矢量化公式
         error = labelMat - h
         weights = weights + alpha * dataMatrix.transpose() * error
         weights_array = np.append(weights_array, weights)
     weights_array = weights_array.reshape(maxCycles, n)
-    print("weights_array", weights_array)
+    # print("weights_array", weights_array)
     return weights.getA(), weights_array  # 将矩阵转换为数组，并返回
 
 
@@ -311,6 +311,11 @@ def stocGradAscent3(dataMatrix, classLabels, numIter=150):
             weights = weights + alpha * error * dataMatrix[randIndex]  # 更新回归系数
             weights_array = np.append(weights_array, weights, axis=0)  # 添加回归系数到数组中
             del (dataIndex[randIndex])  # 删除已经使用的样本
+
+    # aa =  np.array([]); a =[1,2,3]; b= [2,3,4] ;aa = append(aa, a, axis = 0);aa = append(aa, b, axis = 0)
+    # aa = array([ 1.,  2.,  3.,  2.,  3.,  4.]) ;  aa = aa.reshape(2,3) ; 将原来 1 行6 列的数组 变成 2 行3列的
+    # array([[ 1.,  2.,  3.],
+    #      [ 2.,  3.,  4.]])
     weights_array = weights_array.reshape(numIter * m, n)  # 改变维度
     return weights, weights_array
 
@@ -463,11 +468,11 @@ Note:
 def plotWeights(weights_array1, weights_array2):
     # 设置汉字格式
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
-    # 将fig画布分隔成1行1列,不共享x轴和y轴,fig画布的大小为(13,8)
-    # 当nrow=3,nclos=2时,代表fig画布被分为六个区域,axs[0][0]表示第一行第一列
+    # 将 fig 画布分隔成 1 行 1 列,不共享 x 轴和 y 轴, fig 画布的大小为 (20, 10)
+    # 当 nrow=3, nclos=2时,代表 fig 画布被分为六个区域,axs[0][0]表示第一行第一列
     fig, axs = plt.subplots(nrows=3, ncols=2, sharex=False, sharey=False, figsize=(20, 10))
     x1 = np.arange(0, len(weights_array1), 1)
-    # 绘制w0与迭代次数的关系
+    # 绘制 w0 与迭代次数的关系
     axs[0][0].plot(x1, weights_array1[:, 0])
     axs0_title_text = axs[0][0].set_title(u'梯度上升算法：回归系数与迭代次数关系', FontProperties=font)
     axs0_ylabel_text = axs[0][0].set_ylabel(u'W0', FontProperties=font)
@@ -530,6 +535,12 @@ if __name__ == '__main__':
 
     dataMat, labelMat = loadDataSet()
     weights1, weights_array1 = stocGradAscent3(np.array(dataMat), labelMat)
+    m1, n1 = np.shape(weights_array1)
+    print("m1=", m1, "n1=", n1)
+    # m1= 15000 n1= 3
 
     weights2, weights_array2 = gradAscent1(dataMat, labelMat)
+    m2, n2 = np.shape(weights_array2)
+    print("m2=", m2, "n2=", n2)
     plotWeights(weights_array1, weights_array2)
+    # m2= 500 n2= 3
