@@ -156,6 +156,45 @@ def gradAscent(dataMatIn, classLabels):
 
 
 """
+函数说明:梯度上升算法
+
+Parameters:
+    dataMatIn - 数据集
+    classLabels - 数据标签
+Returns:
+    weights.getA() - 求得的权重数组(最优参数)
+    weights_array - 每次更新的回归系数
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Zhihu:
+    https://www.zhihu.com/people/Jack--Cui/
+Modify:
+    2017-08-28
+"""
+
+
+def gradAscent1(dataMatIn, classLabels):
+    dataMatrix = np.mat(dataMatIn)  # 转换成numpy的mat
+    labelMat = np.mat(classLabels).transpose()  # 转换成numpy的mat,并进行转置
+    m, n = np.shape(dataMatrix)  # 返回dataMatrix的大小。m为行数,n为列数。
+    alpha = 0.01  # 移动步长,也就是学习速率,控制更新的幅度。
+    maxCycles = 500  # 最大迭代次数
+    weights = np.ones((n, 1))
+    weights_array = np.array([])
+    print("weights_array",weights_array)
+    for k in range(maxCycles):
+        h = sigmoid(dataMatrix * weights)  # 梯度上升矢量化公式
+        error = labelMat - h
+        weights = weights + alpha * dataMatrix.transpose() * error
+        weights_array = np.append(weights_array, weights)
+    weights_array = weights_array.reshape(maxCycles, n)
+    print("weights_array", weights_array)
+    return weights.getA(), weights_array  # 将矩阵转换为数组，并返回
+
+
+"""
 函数说明:改进的随机梯度上升算法
 目的：为了减少降低计算复杂度
 
@@ -182,10 +221,11 @@ Note:
 def stocGradAscent2(dataMatrix, classLabels, numIter=150):
     # 返回数据集 dataMatrix 的大小，m 行数, n 列数
     m, n = np.shape(dataMatrix)
+    # print("m", m)
     # 初始化参数，也就是系数 创建元素都是 1 的 n 行 1 列数组
     weights = np.ones(n)
     # 创建空二维数组，用来存储每次更新的回归系数
-    # weights_array = np.array([])
+    weights_array = np.array([])
     # 循环 numIter 次，进行迭代
     for j in range(numIter):
         # a = list(range(5)) [0, 1, 2, 3, 4] 创建 list  范围是 0到5
@@ -193,8 +233,9 @@ def stocGradAscent2(dataMatrix, classLabels, numIter=150):
         for i in range(m):
             # 降低 alpha 的大小，原来的 0.01 ，每次减小 1/(j+i)
             # 第一个改进之处在于，alpha在每次迭代的时候都会调整，并且，虽然alpha会随着迭代次数不断减小，
-            # 但永远不会减小到0，因为这里还存在一个常数项
+            # 但永远不会减小到0，因为这里还存在一个常数项 4 是经验值，不要纠结 ，从 4.01 开始逐渐减小到 0.02
             alpha = 4 / (j + i + 1.0) + 0.01
+            # print("alpha", alpha)
             # 随机选取样本 dataIndex 是之前创建的 m 行 个的数据的 索引的 list 存储的是索引
             randIndex = int(random.uniform(0, len(dataIndex)))
             # 只将从 dataMatrix 随机选取的 dataIndex 索引上的数据 进行 sigmoid 函数运算
@@ -207,30 +248,73 @@ def stocGradAscent2(dataMatrix, classLabels, numIter=150):
             # 其中 W 就是 weights , y - h(x) = error ,X 就是 dataMatrix[randIndex]
             weights = weights + alpha * error * dataMatrix[randIndex]
             # 添加回归系数到数组中 axis=0 行 上累加 axis=1 是列方向
-            # weights_array = np.append(weights_array, weights, axis=0)
+            weights_array = np.append(weights_array, weights, axis=0)
             # 从 dataMatrix 数据集中，删除已经使用过的样本
             # 第二个改进的地方在于更新回归系数(最优参数)时，只使用一个样本点，
             # 并且选择的样本点是随机的，每次迭代不使用已经用过的样本点。
             # 这样的方法，就有效地减少了计算量，并保证了回归效果
             del (dataIndex[randIndex])
+            # print(weights)
             # 改变 weights_array 的维度 numIter * m  150* m 行，n 列 ？？？
-            # weights_array = weights_array.reshape(numIter * m, n)
-            # , weights_array
-    return weights
+    weights_array = weights_array.reshape(numIter * m, n)
+    # , weights_array
+    return weights, weights_array
+
 
 def stocGradAscent1(dataMatrix, classLabels, numIter=150):
-    m,n = np.shape(dataMatrix)                                                #返回dataMatrix的大小。m为行数,n为列数。
-    weights = np.ones(n)                                                       #参数初始化
+    m, n = np.shape(dataMatrix)  # 返回dataMatrix的大小。m为行数,n为列数。
+    weights = np.ones(n)  # 参数初始化
     for j in range(numIter):
         dataIndex = list(range(m))
         for i in range(m):
-            alpha = 4/(1.0+j+i)+0.01                                            #降低alpha的大小，每次减小1/(j+i)。
-            randIndex = int(random.uniform(0,len(dataIndex)))                #随机选取样本
-            h = sigmoid(sum(dataMatrix[randIndex]*weights))                    #选择随机选取的一个样本，计算h
-            error = classLabels[randIndex] - h                                 #计算误差
-            weights = weights + alpha * error * dataMatrix[randIndex]       #更新回归系数
-            del(dataIndex[randIndex])                                         #删除已经使用的样本
+            alpha = 4 / (1.0 + j + i) + 0.01  # 降低alpha的大小，每次减小1/(j+i)。
+            randIndex = int(random.uniform(0, len(dataIndex)))  # 随机选取样本
+            h = sigmoid(sum(dataMatrix[randIndex] * weights))  # 选择随机选取的一个样本，计算h
+            error = classLabels[randIndex] - h  # 计算误差
+            weights = weights + alpha * error * dataMatrix[randIndex]  # 更新回归系数
+            del (dataIndex[randIndex])  # 删除已经使用的样本
     return weights
+
+
+"""
+函数说明:改进的随机梯度上升算法
+
+Parameters:
+    dataMatrix - 数据数组
+    classLabels - 数据标签
+    numIter - 迭代次数
+Returns:
+    weights - 求得的回归系数数组(最优参数)
+    weights_array - 每次更新的回归系数
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Zhihu:
+    https://www.zhihu.com/people/Jack--Cui/
+Modify:
+    2017-08-31
+"""
+
+
+def stocGradAscent3(dataMatrix, classLabels, numIter=150):
+    m, n = np.shape(dataMatrix)  # 返回dataMatrix的大小。m为行数,n为列数。
+    weights = np.ones(n)  # 参数初始化
+    weights_array = np.array([])  # 存储每次更新的回归系数
+    for j in range(numIter):
+        dataIndex = list(range(m))
+        for i in range(m):
+            alpha = 4 / (1.0 + j + i) + 0.01  # 降低alpha的大小，每次减小1/(j+i)。
+            randIndex = int(random.uniform(0, len(dataIndex)))  # 随机选取样本
+            h = sigmoid(sum(dataMatrix[randIndex] * weights))  # 选择随机选取的一个样本，计算h
+            error = classLabels[randIndex] - h  # 计算误差
+            weights = weights + alpha * error * dataMatrix[randIndex]  # 更新回归系数
+            weights_array = np.append(weights_array, weights, axis=0)  # 添加回归系数到数组中
+            del (dataIndex[randIndex])  # 删除已经使用的样本
+    weights_array = weights_array.reshape(numIter * m, n)  # 改变维度
+    return weights, weights_array
+
+
 """
 函数说明:绘制数据集
 
@@ -351,12 +435,83 @@ def plotBestFit(weights):
     plt.show()
 
 
+"""
+函数说明:绘制回归系数与迭代次数的关系
+注：
+从这个分类结果中，我们不好看出迭代次数和回归系数的关系，
+也就不能直观的看到每个回归方法的收敛情况。
+因此，我们编写程序，绘制出回归系数和迭代次数的关系曲线
+
+Parameters:
+    weights_array1 - 回归系数数组1
+    weights_array2 - 回归系数数组2
+Returns:
+    无
+Author:
+    Jack Cui
+Blog:
+    http://blog.csdn.net/c406495762
+Zhihu:
+    https://www.zhihu.com/people/Jack--Cui/
+Modify:
+    2017-08-30
+Note:
+    ZJ studied in 2017-10-26
+"""
+
+
+def plotWeights(weights_array1, weights_array2):
+    # 设置汉字格式
+    font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
+    # 将fig画布分隔成1行1列,不共享x轴和y轴,fig画布的大小为(13,8)
+    # 当nrow=3,nclos=2时,代表fig画布被分为六个区域,axs[0][0]表示第一行第一列
+    fig, axs = plt.subplots(nrows=3, ncols=2, sharex=False, sharey=False, figsize=(20, 10))
+    x1 = np.arange(0, len(weights_array1), 1)
+    # 绘制w0与迭代次数的关系
+    axs[0][0].plot(x1, weights_array1[:, 0])
+    axs0_title_text = axs[0][0].set_title(u'梯度上升算法：回归系数与迭代次数关系', FontProperties=font)
+    axs0_ylabel_text = axs[0][0].set_ylabel(u'W0', FontProperties=font)
+    plt.setp(axs0_title_text, size=20, weight='bold', color='black')
+    plt.setp(axs0_ylabel_text, size=20, weight='bold', color='black')
+    # 绘制w1与迭代次数的关系
+    axs[1][0].plot(x1, weights_array1[:, 1])
+    axs1_ylabel_text = axs[1][0].set_ylabel(u'W1', FontProperties=font)
+    plt.setp(axs1_ylabel_text, size=20, weight='bold', color='black')
+    # 绘制w2与迭代次数的关系
+    axs[2][0].plot(x1, weights_array1[:, 2])
+    axs2_xlabel_text = axs[2][0].set_xlabel(u'迭代次数', FontProperties=font)
+    axs2_ylabel_text = axs[2][0].set_ylabel(u'W1', FontProperties=font)
+    plt.setp(axs2_xlabel_text, size=20, weight='bold', color='black')
+    plt.setp(axs2_ylabel_text, size=20, weight='bold', color='black')
+
+    x2 = np.arange(0, len(weights_array2), 1)
+    # 绘制w0与迭代次数的关系
+    axs[0][1].plot(x2, weights_array2[:, 0])
+    axs0_title_text = axs[0][1].set_title(u'改进的随机梯度上升算法：回归系数与迭代次数关系', FontProperties=font)
+    axs0_ylabel_text = axs[0][1].set_ylabel(u'W0', FontProperties=font)
+    plt.setp(axs0_title_text, size=20, weight='bold', color='black')
+    plt.setp(axs0_ylabel_text, size=20, weight='bold', color='black')
+    # 绘制w1与迭代次数的关系
+    axs[1][1].plot(x2, weights_array2[:, 1])
+    axs1_ylabel_text = axs[1][1].set_ylabel(u'W1', FontProperties=font)
+    plt.setp(axs1_ylabel_text, size=20, weight='bold', color='black')
+    # 绘制w2与迭代次数的关系
+    axs[2][1].plot(x2, weights_array2[:, 2])
+    axs2_xlabel_text = axs[2][1].set_xlabel(u'迭代次数', FontProperties=font)
+    axs2_ylabel_text = axs[2][1].set_ylabel(u'W1', FontProperties=font)
+    plt.setp(axs2_xlabel_text, size=20, weight='bold', color='black')
+    plt.setp(axs2_ylabel_text, size=20, weight='bold', color='black')
+
+    plt.show()
+
+
 if __name__ == '__main__':
     # gradient_ascent_test()
     # 1.999999515279857 也就是 x 为 1.999999515279857 四舍五入2 时 可以取得函数最大值
     # dataMat, labelMat = loadDataSet()
     # print(dataMat)
     # plotDataSet()
+
     # 梯度上升算法
     # dataMat, labelMat = loadDataSet()
     # weights = gradAscent(dataMat, labelMat)
@@ -365,7 +520,16 @@ if __name__ == '__main__':
     # [[ 4.12414349]
     # [ 0.48007329]
     # [-0.6168482 ]]
-    # 随机梯度上升算法 
+
+    # 随机梯度上升算法
+    # dataMat, labelMat = loadDataSet()
+    # weights = stocGradAscent2(np.array(dataMat), labelMat)
+    # plotBestFit(weights)
+
+    # 绘制 迭代次数 和 回归系数之间的关系
+
     dataMat, labelMat = loadDataSet()
-    weights = stocGradAscent2(np.array(dataMat), labelMat)
-    plotBestFit(weights)
+    weights1, weights_array1 = stocGradAscent3(np.array(dataMat), labelMat)
+
+    weights2, weights_array2 = gradAscent1(dataMat, labelMat)
+    plotWeights(weights_array1, weights_array2)
