@@ -315,7 +315,7 @@ def classifyPerson():
     norminArr = (inArr - minVals) / ranges
     # 进行分类器算法分类 返回测试结果
     classifyResult = classify0(norminArr, normMat, datingLabels, 3)
-    print("你可能 %s 这个人" % resultList[classifyResult])
+    print("你可能 %s 这个人" % resultList[classifyResult-1])
 
 
 """
