@@ -177,3 +177,5 @@ if __name__ == '__main__':
     B = np.array([2, 3, 9])
     median = findMedian(A, B)
     print(median)
+#     3,4 偶数个 相加 除2
+#     3.5
