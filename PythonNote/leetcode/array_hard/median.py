@@ -50,7 +50,9 @@ If we can ensure:
 1) len(left_part) == len(right_part)
 2) max(left_part) <= min(right_part)
 
-then we divide all elements in {A, B} into two parts with equal length, and one part is always greater than the other. Then median = (max(left_part) + min(right_part))/2.
+then we divide all elements in {A, B} into two parts with equal length,
+ and one part is always greater than the other.
+ Then median = (max(left_part) + min(right_part))/2.
 
 To ensure these two conditions, we just need to ensure:
 
@@ -64,12 +66,66 @@ To ensure these two conditions, we just need to ensure:
         
 (2) B[j-1] <= A[i] and A[i-1] <= B[j]
 
+ps.2 Why n >= m? Because I have to make sure j is non-nagative since 0 <= i <= m and j = (m + n + 1)/2 - i. 
+If n < m , then j may be nagative, that will lead to wrong result.
+
+推导：
+    j = (m + n + 1)/2 - i （因为 0 <= i <= m 假设 i= m）
+    j = (m + n + 1)/2 - i <=(m + n + 1)/2 - m <= (n-m)/2 + 1/2 ( n < m ,n - m < 0 ) 如果 n - m < -1 则 j < 0
+    
+    eg： m = 5; n =  2; i = 5
+    j = ((m + n + 1)/2 - i)
+      = (5 + 2 + 1)/2 - 5 = -1 (error)
+      要保证 j >= 0 [0,n ] 区间
 
 m = 8 ; i = 4
 n = 4 ; j = 2
 
 i + j = m - i + n - j
 
-4 + 2 = 8 - 4 + 4- 2 =6
+4 + 2 = 8 - 4 + 4- 2 = 6
+
+Thank @Quentin.chen , him pointed out that: i < m ==> j > 0 and i > 0 ==> j < n . Because:
+
+m <= n, i < m ==> j = (m+n+1)/2 - i > (m+n+1)/2 - m >= (2*m+1)/2 - m >= 0    
+m <= n, i > 0 ==> j = (m+n+1)/2 - i < (m+n+1)/2 <= (2 * n + 1)/2 <= n
+
+首先：j = (m + n + 1)/2 - i  //(因为 i < m ,将 i 替换为 m ， 把 (m + n + 1)/2 看做为 A ：A - i > A - m ；因为 i < m)
+
+      j = (m + n + 1)/2 - i > ( m + n + 1)/2 - m // (m+n+1)/2 - 2m/2 = (2*m+1)/2 - m = 1/2 > 0
+      
+      所以 i < m ==> j > 0
+      
 
 """
+
+"""
+A,B 两个有序的数组
+
+:return  中位数
+"""
+import numpy as np
+
+
+def findMedian(A, B):
+    m = len(A)
+    n = len(B)
+
+    if m > n:
+        # A = np.array([2, 3, 4, 5, 6])
+        # B = np.array([2, 3, 9])
+        # A: [2 3 9] B: [2 3 4 5 6] m: 3 n: 5
+        # 互换，也就是 确保 n >= m
+        A, B, m, n = B, A, n, m
+  # print('A:', A, 'B:', B, 'm:', m, 'n:', n)
+    if n < 0:
+        # 程序员明确的触发异常，即 raise 语句 ValueError 传入无效参数
+        raise ValueError
+
+
+
+
+if __name__ == '__main__':
+    A = np.array([2, 3, 4, 5, 6])
+    B = np.array([2, 3, 9])
+    findMedian(A, B)
