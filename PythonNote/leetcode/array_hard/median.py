@@ -124,21 +124,26 @@ def findMedian(A, B):
         # 程序员明确的触发异常，即 raise 语句 ValueError 传入无效参数
         raise ValueError
     # i 的取值范围 从 0  到 m
-    imin, imax, half_lenth = 0, m, (m + n + 1) / 2
+    # 注意 ： python3  //  代替 / 取整
+    imin, imax, half_lenth = 0, m, (m + n + 1) // 2
+    print('half_lenth:',half_lenth)
+    # 4.5 取 4 （5+3+1）/2 = 4.5
 
-    while imin < imax:
+    while imin <= imax:
         # 二分法
-        i = (imin + imax) / 2
-        j = half_lenth - 1
+        i = (imin + imax) // 2
+        print('i:', i)
+        # 0.5 取 0
+        j = half_lenth - i
         #    left_part             |        right_part
         # A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
         # B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
         # 也就是 i 不等于 m 小于m 的情况下，按理说  2) max(left_part) <= min(right_part)
-        # B[j-1] 应该小于 A[i] 若 B[j-1] > A[i] 则 i 取值 过小，应该增大，向后取更大的值
+        # B[j-1] 应该小于 A[i] 若 B[j-1] > A[i] 则 i 取值 过小，imin应该增大，向后取更大的值
         if i < m and B[j - 1] > A[i]:
             imin = i + 1
         elif i > 0 and A[i - 1] > B[j]:
-            # A[i - 1] 应该小于 B[j] 若 A[i - 1] > B[j]: 则 i 取值 过大，应该减小，向前取更小的值
+            # A[i - 1] 应该小于 B[j] 若 A[i - 1] > B[j]: 则 i 取值 过大，imax 应该减小，向前取更小的值
             imax = i - 1
         else:
             # i is perfect
@@ -154,10 +159,21 @@ def findMedian(A, B):
             else:
                 # i != 0 &&j != 0 那么 左侧最大值 A[i-1]和B[j-1] 其中一个
                 max_of_left = max(A[i - 1], B[j - 1])
-
-
+            # 如果两个数组的总个数 余 2 为1 则 为 odd 奇数位
+            if (m + n) % 2 == 1:
+                # 则直接返回 max_of_left 则为中位数
+                return max_of_left
+            if i == m:
+                min_of_right = B[j]
+            elif j == n:
+                min_of_right = A[i]
+            else:
+                min_of_right = min(B[j], A[i])
+            #   even 偶数 则中间两个数 相加除 2
+            return (max_of_left + min_of_right)/2
 
 if __name__ == '__main__':
     A = np.array([2, 3, 4, 5, 6])
     B = np.array([2, 3, 9])
-    findMedian(A, B)
+    median = findMedian(A, B)
+    print(median)
