@@ -102,6 +102,8 @@ m <= n, i > 0 ==> j = (m+n+1)/2 - i < (m+n+1)/2 <= (2 * n + 1)/2 <= n
 """
 A,B 两个有序的数组
 
+二分法
+
 :return  中位数
 """
 import numpy as np
@@ -117,11 +119,41 @@ def findMedian(A, B):
         # A: [2 3 9] B: [2 3 4 5 6] m: 3 n: 5
         # 互换，也就是 确保 n >= m
         A, B, m, n = B, A, n, m
-  # print('A:', A, 'B:', B, 'm:', m, 'n:', n)
+        # print('A:', A, 'B:', B, 'm:', m, 'n:', n)
     if n < 0:
         # 程序员明确的触发异常，即 raise 语句 ValueError 传入无效参数
         raise ValueError
+    # i 的取值范围 从 0  到 m
+    imin, imax, half_lenth = 0, m, (m + n + 1) / 2
 
+    while imin < imax:
+        # 二分法
+        i = (imin + imax) / 2
+        j = half_lenth - 1
+        #    left_part             |        right_part
+        # A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
+        # B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
+        # 也就是 i 不等于 m 小于m 的情况下，按理说  2) max(left_part) <= min(right_part)
+        # B[j-1] 应该小于 A[i] 若 B[j-1] > A[i] 则 i 取值 过小，应该增大，向后取更大的值
+        if i < m and B[j - 1] > A[i]:
+            imin = i + 1
+        elif i > 0 and A[i - 1] > B[j]:
+            # A[i - 1] 应该小于 B[j] 若 A[i - 1] > B[j]: 则 i 取值 过大，应该减小，向前取更小的值
+            imax = i - 1
+        else:
+            # i is perfect
+            #    left_part             |        right_part
+            # A[0], A[1], ..., A[i-1]  |  A[i], A[i+1], ..., A[m-1]
+            # B[0], B[1], ..., B[j-1]  |  B[j], B[j+1], ..., B[n-1]
+            # i == 0: 也就是  A[0], A[1], ..., A[i-1] 不存在，那么 左边 最大的值 就是 B[j - 1]
+            if i == 0:
+                max_of_left = B[j - 1]
+            # j == 0: 也就是  B[0], B[1], ..., B[j-1] 不存在，那么 左边 最大的值 就是 A[i-1]
+            elif j == 0:
+                max_of_left = A[i - 1]
+            else:
+                # i != 0 &&j != 0 那么 左侧最大值 A[i-1]和B[j-1] 其中一个
+                max_of_left = max(A[i - 1], B[j - 1])
 
 
 
