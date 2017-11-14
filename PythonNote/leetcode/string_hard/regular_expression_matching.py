@@ -41,7 +41,7 @@ So for this testcase "c* a* b" could be 0 c 2 a and 1 b, it matched aab
 
 """
 part1:
-
+【Recursion 递归】
 Without a Kleene star'*', our solution would look like this:
 没有 * ，不含通配符 * 的情况下
 """
@@ -50,8 +50,8 @@ Without a Kleene star'*', our solution would look like this:
 def match(text, pattern):
     if not pattern:
         return not text
-    # pattern[0] pattern 里面第 0 个元素在 {text[0], '.'} 这个字典中，
-    # {text[0], '.'} 这个字典包含 text 里 第 0 个元素 和 '.'
+    # pattern[0] pattern 里面第 0 个元素是否在 {text[0], '.'} 这个字典中，
+    # {text[0], '.'} 这个字典包含 text 里 第 0 个元素 和 '.'，'.' 代表任意元素
     # bool(text) 1. 若 text = "abba"  print('bool(text)'True
     # text = ""  print('bool(text)') False ,也就是 bool(text)  测试 text 不为空
     first_match = bool(text) and pattern[0] in {text[0], '.'}
@@ -70,6 +70,7 @@ def learn_bool():
 
 """
 part 2:
+【Recursion 递归】
 If a star is present in the pattern, it will be in the second position 
 pattern[1]. Then, we may ignore this part of the pattern, 
 or delete a matching character in the text. 
@@ -103,6 +104,25 @@ class Solution(object):
             # 如果 pattern[1] 索引1 的位置不是 * text[1:], pattern[1:] 都从 索引1 位置取，递归
             return first_match and self.isMatch(text[1:], pattern[1:])
 
+"""
+class Solution {
+    public boolean isMatch(String text, String pattern) {
+        # if pattern 是空的，那 如果 text 也是空 则 匹配成功都是空 返回true
+        if (pattern.isEmpty()) return text.isEmpty();
+        boolean first_match = (!text.isEmpty() && 
+                               (pattern.charAt(0) == text.charAt(0) || pattern.charAt(0) == '.'));
+        
+        if (pattern.length() >= 2 && pattern.charAt(1) == '*'){
+            return (isMatch(text, pattern.substring(2)) || 
+                    (first_match && isMatch(text.substring(1), pattern)));
+        } else {
+            return first_match && isMatch(text.substring(1), pattern.substring(1));
+        }
+    }
+}
+
+"""
+
 
 def test(text, pattern):
     # print(test("eee", ""))  # False
@@ -111,6 +131,13 @@ def test(text, pattern):
         return not text
 
 
+"""
+
+
+"""
+
+
 if __name__ == '__main__':
     print(test("eee", ""))  # False
+    print(test("", ""))  # True
     print(test("eee", "eee"))  # None
