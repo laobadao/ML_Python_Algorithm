@@ -1,9 +1,11 @@
 """
 4. Median of Two Sorted Arrays
 
-There are two sorted arrays nums1 and nums2 of size m and n respectively.
+Question: 给出的 两个数组已经是排序好的数组,求中位数
 
-给出的 两个数组已经是排序好的数组
+解决策略：[Divide and Conquer,Array,Binary Search][分治法，数组，二分法]
+
+There are two sorted arrays nums1 and nums2 of size m and n respectively.
 
 Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
 
