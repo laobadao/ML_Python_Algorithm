@@ -228,6 +228,8 @@ dataSet1 = [0, 1, 2, 3, 4, 5]
 print("dataSet1[:1]", dataSet1[:1])  # : 表示区间 [:1] 对于 list 来说 代表 取 0到1 之间的数据 不包含1
 print("dataSet1[1+1:]", dataSet1[1 + 1:])  # [1+1:] 代表 取 索引2 往后的数据 包含2
 
+print("dataSet1[1+1:]", dataSet1[3:])  # [3:] 代表 取 索引 3 往后的数据 包含 3
+# [3, 4, 5]
 """
 append() and  extend()  区别
 
