@@ -53,7 +53,7 @@ def match(text, pattern):
     # pattern[0] pattern 里面第 0 个元素在 {text[0], '.'} 这个字典中，
     # {text[0], '.'} 这个字典包含 text 里 第 0 个元素 和 '.'
     # bool(text) 1. 若 text = "abba"  print('bool(text)'True
-    # text = ""  print('bool(text)') False
+    # text = ""  print('bool(text)') False ,也就是 bool(text)  测试 text 不为空
     first_match = bool(text) and pattern[0] in {text[0], '.'}
     # match() 方法递归循环的 去做判断，每一个字母的匹配，返回的是布尔 Boolean 类型
     # text[1:] 代表 从 索引 1 开始包含索引1 的元素 ，也就是不包含索引0 的元素
@@ -66,3 +66,51 @@ def learn_bool():
     text = ""
     print('bool(text)', bool(text))  # False
     return bool(text)
+
+
+"""
+part 2:
+If a star is present in the pattern, it will be in the second position 
+pattern[1]. Then, we may ignore this part of the pattern, 
+or delete a matching character in the text. 
+If we have a match on the remaining strings after any of these operations,
+ then the initial inputs matched.
+
+含有 * 的情況下，
+
+"""
+
+
+class Solution(object):
+    def isMatch(self, text, pattern):
+        # 判断不为空
+        if not pattern:
+            return not text
+        # 因为如果包含 * ，则 肯定是从索引 1 开始有 * ，则索引 0 位的元素 需要判断下 是否匹配
+        first_match = bool(text) and pattern[0] in {text[0], '.'}
+        # 若 pattern 的长度 >= 2 ，且索引 1 位的元素是 *
+        if len(pattern) >= 2 and pattern[1] == '*':
+            # 1. self.isMatch(text, pattern[2:])
+            # pattern[2:] 从索引为 2 的元素开始，包含索引 2 的元素，
+            # 例如 a*bb,则 pattern 则 忽略前面的  a* ，从 bb 往后作为 pattern
+            # 2.self.isMatch(text, pattern[2:]) or first_match 其中有一个是真
+            # 也就是 若 first_match 是 false ，比如 (bbb,a*bbb)
+            # b and a not equal ,a*bbb means  0 or more a and 3 b ,then True
+            # 3.self.isMatch(text[1:], pattern) --text 从 索引1 开始，包含 1 然后再与 原 pattern 进行匹配
+            return (self.isMatch(text, pattern[2:]) or
+                    first_match and self.isMatch(text[1:], pattern))
+        else:
+            # 如果 pattern[1] 索引1 的位置不是 * text[1:], pattern[1:] 都从 索引1 位置取，递归
+            return first_match and self.isMatch(text[1:], pattern[1:])
+
+
+def test(text, pattern):
+    # print(test("eee", ""))  # False
+    # print(test("eee", "eee"))  # None
+    if not pattern:
+        return not text
+
+
+if __name__ == '__main__':
+    print(test("eee", ""))  # False
+    print(test("eee", "eee"))  # None
