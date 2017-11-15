@@ -71,13 +71,19 @@ def learn_bool():
 """
 part 2:
 【Recursion 递归】
+含有 * 的情況下，
+
 If a star is present in the pattern, it will be in the second position 
 pattern[1]. Then, we may ignore this part of the pattern, 
 or delete a matching character in the text. 
 If we have a match on the remaining strings after any of these operations,
  then the initial inputs matched.
 
-含有 * 的情況下，
+先来看递归的解法：
+
+如果P[j+1]!='*'，S[i] == P[j]=>匹配下一位(i+1, j+1)，S[i]!=P[j]=>匹配失败；
+
+如果P[j+1]=='*'，S[i]==P[j]=>匹配下一位(i+1, j+2)或者(i, j+2)，S[i]!=P[j]=>匹配下一位(i,j+2)。
 
 """
 
@@ -103,6 +109,7 @@ class Solution(object):
         else:
             # 如果 pattern[1] 索引1 的位置不是 * text[1:], pattern[1:] 都从 索引1 位置取，递归
             return first_match and self.isMatch(text[1:], pattern[1:])
+
 
 """
 class Solution {
@@ -132,12 +139,73 @@ def test(text, pattern):
 
 
 """
+方法2 ：Dynamic Programming 动态规划
 
+寻找最优子结构 optimal substructure
+
+As the problem has an optimal substructure, it is natural to cache intermediate results. 
+We ask the question }dp(i, j): does text[i:] and pattern[j:] match?
+ We can describe our answer in terms of answers to questions involving smaller strings.
+
+ Algorithm
+
+We proceed with the same recursion as in Approach #1,
+ except because calls will only ever be made to match(text[i:], pattern[j:]),
+  we use dp(i, j) to handle those calls instead, saving us expensive string-building
+operations and allowing us to cache the intermediate results.存储中间值
+
+Top-Down Variation 
+
+自上而下的变化
+
+用数组 DP :dp[i][j] 表示 s[0..i] 和 p[0..j] 是否 match，
+当 p[j] != '*'，b[i + 1][j + 1] = b[i][j] && s[i] == p[j] ，当p[j] == '*' 要再分类讨论
+
+用b[i][j]来代表由s除掉0到i下标的字符能否被由p除掉0到j下标的字符完全匹配，也就是s[i:]能否被p[j:]完全匹配
 
 """
+
+
+class SolutionDP1(object):
+    def isMatch(self, text, pattern):
+        # 字典缓存 存储中间值
+        memo = {}
+        # solu = SolutionDP1()
+        # re = SolutionDP1.isMatch(solu, "aaa", "a*")
+        # i= 0 j= 0
+        # i= 0 j= 2
+        # i= 1 j= 0
+        # i= 1 j= 2
+        # i= 2 j= 0
+        # i= 2 j= 2
+        # i= 3 j= 0
+        # i= 3 j= 2
+        # i,j 代表 text 中 从 0 到 i,与 pattern 中 0  到 j 是匹配的，
+        def dp(i, j):
+            # 1.debug 调试，当第一次执行是，def dp(i, j): 断点在这，然后直接 到 最后一句  return dp(0, 0)
+            # 相当于是初始化 i = 0; j = 0;
+            # 如果 (i, j) 没有在 缓存中，
+            if (i, j) not in memo:
+                print('i=', i, 'j=', j)
+                if j == len(pattern):
+                    ans = i == len(text)
+                else:
+                    first_match = i < len(text) and pattern[j] in {text[i], '.'}
+                    if j + 1 < len(pattern) and pattern[j + 1] == '*':
+                        ans = dp(i, j + 2) or first_match and dp(i + 1, j)
+                    else:
+                        ans = first_match and dp(i + 1, j + 1)
+
+                memo[i, j] = ans
+            return memo[i, j]
+
+        return dp(0, 0)
 
 
 if __name__ == '__main__':
     print(test("eee", ""))  # False
     print(test("", ""))  # True
     print(test("eee", "eee"))  # None
+    solu = SolutionDP1()
+    re = SolutionDP1.isMatch(solu, "aaa", "a*")
+    print("re", re)  # re True
