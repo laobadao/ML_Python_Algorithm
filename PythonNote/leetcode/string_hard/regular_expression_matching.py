@@ -191,7 +191,8 @@ class SolutionDP1(object):
             if (i, j) not in memo:
                 print('i=', i, 'j=', j)
                 if j == len(pattern):
-                    # 如果 j = pattern 的长度，结束 那么 对比的过程中  len(text) >=  len(pattern)
+                    # ans 是 boolean 型 i == len(text) i 是否等于 len(text)
+                    # ans = ( i == len(text)) 看仔细了 ，== 是判断 判断结果是 Boolean 然后再赋值
                     ans = i == len(text)
                 else:
                     # 认为 i ,j 之前的都是匹配的，所以 判断 i j 是否匹配
@@ -200,12 +201,22 @@ class SolutionDP1(object):
                     if j + 1 < len(pattern) and pattern[j + 1] == '*':
                         # 递归 dp(i, j + 2) or first_match
                         # first_match 为 true 或 dp(i, j + 2) 为 true
-                        # 1.first_match 为 true  则代表 i ,j 匹配 且 j + 1 为 *  * 代表 0 个 或多个
-                        # 若 dp(i, j + 2) 为真，就是 J+2 后面还有数据，继续判断 ，
-                        # 若为真 必须满足的是
+                        # 1.first_match 为 true  则代表 i ,j 匹配 且 j + 1 为 * , * 代表 0 个 或多个
+                        # i ，j 匹配，且 j + 1 为 *  ,* 代表 0 个 或多个 .
+                        #  means 对于 pattern 来说 j + 1 为 *， 那么 pattern 的 j 位 上的字母 可以是 0 个或多个
+                        # bbbccc , a* b*c* ,以这个为例  first_match ，i=0 ,j=0 first_match=false 因为 b!=a
+                        # 又因为 “a* b*c*” 的 j +1 =1 是* ，所以，j + 2 位还得 跟 bbbccc 的 i =0 上的 b  再判断一遍 ，
+                        # ,因为 * 代表  j+ 1 的 前一个 可以是 0 个 或多个
+                        # dp(i, j + 2) or first_match = true 对于 bbbccc , a* b*c*
+                        #  bbbccc , a*bbb*c* 
                         ans = dp(i, j + 2) or first_match and dp(i + 1, j)
+                        # dp(i + 1, j) * 0 或 多个 这个代表 bbbb 和 b* 的 这种情况
+                        # 不断的 去判断 i + 1 递增连续多个 是否与 j 位相同
+                        # 补充： ans = False or False and False      --ans = False
+                        # and 都是 True 才是 True
                     else:
                         # 若 j + 1 不为 * 的情况 ，则继续 判断 后面的
+                        # 简单理解： first_match i ,j 是否匹配的结果 与上 下一位 不为 * 的情况下，i + 1, j + 1 是否匹配
                         ans = first_match and dp(i + 1, j + 1)
 
                 memo[i, j] = ans
@@ -257,7 +268,7 @@ if __name__ == '__main__':
     print(test("", ""))  # True
     print(test("eee", "eee"))  # None
     solu = SolutionDP1()
-    re = SolutionDP1.isMatch(solu, "aaabbbccc", "a*b*c*")
+    re = SolutionDP1.isMatch(solu, "bbbccc", "a*b*c*")
     print("re", re)  # re True
 
     # solu = SolutionDP1()
@@ -276,3 +287,4 @@ if __name__ == '__main__':
     # i= 4 j= 2
     # i= 4 j= 4
 #     观察 ， i 是 加1 递增的变化， j 是 + 2 递增的
+# isMatch(solu, "bbbccc", "a*b*c*") --> true  // a* 代表是 0 个或多个 a
