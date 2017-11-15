@@ -170,6 +170,8 @@ class SolutionDP1(object):
     def isMatch(self, text, pattern):
         # 字典缓存 存储中间值
         memo = {}
+        print("memo", memo)
+        #  memo 里面存储的一直是 False True
         # solu = SolutionDP1()
         # re = SolutionDP1.isMatch(solu, "aaa", "a*")
         # i= 0 j= 0
@@ -185,27 +187,92 @@ class SolutionDP1(object):
             # 1.debug 调试，当第一次执行是，def dp(i, j): 断点在这，然后直接 到 最后一句  return dp(0, 0)
             # 相当于是初始化 i = 0; j = 0;
             # 如果 (i, j) 没有在 缓存中，
+            print("(i, j)", (i, j))
             if (i, j) not in memo:
                 print('i=', i, 'j=', j)
                 if j == len(pattern):
+                    # 如果 j = pattern 的长度，结束 那么 对比的过程中  len(text) >=  len(pattern)
                     ans = i == len(text)
                 else:
+                    # 认为 i ,j 之前的都是匹配的，所以 判断 i j 是否匹配
                     first_match = i < len(text) and pattern[j] in {text[i], '.'}
+                    # 判断 j + 1 为 * 的情况
                     if j + 1 < len(pattern) and pattern[j + 1] == '*':
+                        # 递归 dp(i, j + 2) or first_match
+                        # first_match 为 true 或 dp(i, j + 2) 为 true
+                        # 1.first_match 为 true  则代表 i ,j 匹配 且 j + 1 为 *  * 代表 0 个 或多个
+                        # 若 dp(i, j + 2) 为真，就是 J+2 后面还有数据，继续判断 ，
+                        # 若为真 必须满足的是
                         ans = dp(i, j + 2) or first_match and dp(i + 1, j)
                     else:
+                        # 若 j + 1 不为 * 的情况 ，则继续 判断 后面的
                         ans = first_match and dp(i + 1, j + 1)
 
                 memo[i, j] = ans
+                print(" memo[i, j]",  memo[i, j])
             return memo[i, j]
 
         return dp(0, 0)
+"""
 
+enum Result {
+    TRUE, FALSE
+}
+
+class Solution {
+    Result[][] memo;
+        
+    public boolean isMatch(String text, String pattern) {
+        memo = new Result[text.length() + 1][pattern.length() + 1];
+        return dp(0, 0, text, pattern);
+    }
+    
+    public boolean dp(int i, int j, String text, String pattern) {
+        if (memo[i][j] != null) {
+            return memo[i][j] == Result.TRUE;
+        }
+        boolean ans;
+        if (j == pattern.length()){
+            ans = i == text.length();
+        } else{
+            boolean first_match = (i < text.length() && 
+                                   (pattern.charAt(j) == text.charAt(i) ||
+                                    pattern.charAt(j) == '.'));
+
+            if (j + 1 < pattern.length() && pattern.charAt(j+1) == '*'){
+                ans = (dp(i, j+2, text, pattern) || 
+                       first_match && dp(i+1, j, text, pattern));
+            } else {
+                ans = first_match && dp(i+1, j+1, text, pattern);
+            }
+        }
+        memo[i][j] = ans ? Result.TRUE : Result.FALSE;
+        return ans;
+    }
+}
+"""
 
 if __name__ == '__main__':
     print(test("eee", ""))  # False
     print(test("", ""))  # True
     print(test("eee", "eee"))  # None
     solu = SolutionDP1()
-    re = SolutionDP1.isMatch(solu, "aaa", "a*")
+    re = SolutionDP1.isMatch(solu, "aaabbbccc", "a*b*c*")
     print("re", re)  # re True
+
+    # solu = SolutionDP1()
+    # re = SolutionDP1.isMatch(solu, "aabb", "a*b*")
+    # i= 0 j= 0
+    # i= 0 j= 2
+    # i= 0 j= 4
+    # i= 1 j= 0
+    # i= 1 j= 2
+    # i= 1 j= 4
+    # i= 2 j= 0
+    # i= 2 j= 2
+    # i= 2 j= 4
+    # i= 3 j= 2
+    # i= 3 j= 4
+    # i= 4 j= 2
+    # i= 4 j= 4
+#     观察 ， i 是 加1 递增的变化， j 是 + 2 递增的
