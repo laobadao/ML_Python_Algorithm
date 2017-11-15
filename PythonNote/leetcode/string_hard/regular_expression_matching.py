@@ -208,7 +208,7 @@ class SolutionDP1(object):
                         # 又因为 “a* b*c*” 的 j +1 =1 是* ，所以，j + 2 位还得 跟 bbbccc 的 i =0 上的 b  再判断一遍 ，
                         # ,因为 * 代表  j+ 1 的 前一个 可以是 0 个 或多个
                         # dp(i, j + 2) or first_match = true 对于 bbbccc , a* b*c*
-                        #  bbbccc , a*bbb*c* 
+                        #  bbbccc , a*bbb*c*
                         ans = dp(i, j + 2) or first_match and dp(i + 1, j)
                         # dp(i + 1, j) * 0 或 多个 这个代表 bbbb 和 b* 的 这种情况
                         # 不断的 去判断 i + 1 递增连续多个 是否与 j 位相同
@@ -261,6 +261,15 @@ class Solution {
         return ans;
     }
 }
+Complexity Analysis
+
+Time Complexity: Let T, P be the lengths of the text and the pattern respectively.
+The work for every call to dp(i, j) for i=0, ... ,Ti=0,...,T; j=0, ... ,Pj=0,...,P is done once, 
+and it is O(1) work. Hence, the time complexity is O(TP).
+
+Space Complexity: The only memory we use is the O(TP) boolean entries in our cache.
+ Hence, the space complexity is O(TP).
+
 """
 
 if __name__ == '__main__':

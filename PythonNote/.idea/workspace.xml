@@ -49,8 +49,8 @@
       <file leaf-file-name="regular_expression_matching.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/leetcode/string_hard/regular_expression_matching.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="222" column="47" lean-forward="true" selection-start-line="222" selection-start-column="47" selection-end-line="222" selection-end-column="47" />
+            <state relative-caret-position="324">
+              <caret line="268" column="0" lean-forward="true" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -896,8 +896,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/leetcode/string_hard/regular_expression_matching.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="222" column="47" lean-forward="true" selection-start-line="222" selection-start-column="47" selection-end-line="222" selection-end-column="47" />
+        <state relative-caret-position="324">
+          <caret line="268" column="0" lean-forward="true" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
           <folding />
         </state>
       </provider>
