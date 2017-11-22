@@ -298,21 +298,22 @@ def simpleSMO(dataMatIn, classLabels, C, toler, maxIter):
     #  C - 松弛变量  toler - 容错率  maxIter - 最大迭代次数
     # 将 dataMatIn ,classLabels 从 list  转化为 numpy 中的 matrix矩阵
     dataMatrix = np.mat(dataMatIn)
-    labelMat = np.mat(classLabels)
+    labelMat = np.mat(classLabels).transpose()
     # 初始化 参数 b ，后面需要更新迭代，计算 dataMatrix 的维度，np.shape =（n,m）
     b = 0
     m, n = np.shape(dataMatrix)
     # 初始化 参数 alpha 为 （m,1）维度的 0 矩阵 ,后面需要更新迭代
-    alphas = np.mat(np.zeros(m, 1))
+    alphas = np.mat(np.zeros((m, 1)))
     # 初始化迭代次数  iter_num = 0
     iter_num = 0
     # 最多迭代 maxIter 次
     while iter_num < maxIter:
         alphaPairsChanged = 0
         for i in range(m):
-            fXi = float(np.multiply(alphas, labelMat).T * (dataMatrix * dataMatrix[i, :]).T) + b
+            fxi = float(np.multiply(alphas, labelMat).T * (dataMatrix * dataMatrix[i, :].T)) + b
+            # fXi = float(np.multiply(alphas, labelMat).T * (dataMatrix * dataMatrix[i, :].T)) + b
             # Ei = f(xi) - yi
-            Ei = fXi - float(labelMat[i])
+            Ei = fxi - float(labelMat[i])
             # 优化更新 alpha ，设定一定的容错率 toler - 容错率
             # ??? 0 < alphas < C   labelMat[i] * Ei
             if ((labelMat[i] * Ei < -toler) and (alphas[i] < C)) or ((labelMat[i] * Ei > toler) and (alphas[i] > 0)):
@@ -337,25 +338,54 @@ def simpleSMO(dataMatIn, classLabels, C, toler, maxIter):
                     continue
                 # 步骤3 ; 计算 eta 就是那个 η ，就是 学习速率 learning rate = xi.T* xi + xj.T * xj - 2xi.T * xj
                 # 不过这里是按 负 值计算 当 > 0 时则结束本次循环，且 continue
-                eta = 2.0 * dataMatrix[i,:].T * dataMatrix[j:] - dataMatrix[i:] * dataMatrix[i,:].T -dataMatrix[j:]* dataMatrix[j,:].T
+                eta = 2.0 * dataMatrix[i, :] * dataMatrix[j, :].T - dataMatrix[i, :] * dataMatrix[i, :].T - dataMatrix[
+                                                                                                            j,
+                                                                                                            :] * dataMatrix[
+                                                                                                                 j, :].T
                 if eta > 0: print('eta > = 0'); continue
                 # 步骤4;更新 alpha_j
-                alphas[j] -= labelMat[j](Ei - Ej)/eta
+                alphas[j] -= labelMat[j]*(Ei - Ej) / eta
                 # 步骤5;修剪 alpha_j
-                alphas[j] = clipAlpha(alphas[j],H,L)
+                alphas[j] = clipAlpha(alphas[j], H, L)
                 if abs(alphas[j] - alphaJold) < 0.00001:
                     print('alpha_j 变化太小')
                     continue
                 # 步骤6;更新 alpha_i
-                alphas[i] += labelMat[i] * labelMat[j]*(alphaJold - alphas[j])
+                alphas[i] += labelMat[i] * labelMat[j] * (alphaJold - alphas[j])
                 # 步骤7;更新 b_1 and b_2
-
+                b1 = b - Ei - labelMat[i] * (alphas[i] - alphaIold) * dataMatrix[i, :] * dataMatrix[i, :].T - labelMat[
+                                                                                                                  j] * (
+                                                                                                                  alphas[
+                                                                                                                      j] - alphaJold) * dataMatrix[
+                                                                                                                                        i,
+                                                                                                                                        :] * dataMatrix[
+                                                                                                                                             j,
+                                                                                                                                             :].T
+                b2 = b - Ej - labelMat[i] * (alphas[i] - alphaIold) * dataMatrix[i, :] * dataMatrix[j, :].T - labelMat[
+                                                                                                                  j] * (
+                                                                                                                  alphas[
+                                                                                                                      j] - alphaJold) * dataMatrix[
+                                                                                                                                        j,
+                                                                                                                                        :] * dataMatrix[
+                                                                                                                                             j,
+                                                                                                                                             :].T
                 # 步骤8;根据 b_1 and b_2 更新 b
+                if 0 < alphas[i] < C:
+                    b = b1
+                elif 0 < alphas[j] < C:
+                    b = b2
+                else:
+                    b = (b1 + b2) / 2.0
                 # 统计优化次数
-                # 打印统计信息
-
-        return b,alphas
-
+                alphaPairsChanged += 1
+                print('第 %d 次迭代样本：%d , alpha 优化次数：%d ' % (iter_num, i, alphaPairsChanged))
+        # 更新迭代次数
+        if alphaPairsChanged == 0:
+            iter_num += 1
+        else:
+            iter_num = 0
+        print('迭代次数：%d' % iter_num)
+    return b, alphas
 
 
 """
@@ -435,11 +465,11 @@ def get_w(dataMat, labelMat, alphas):
 
 
 if __name__ == '__main__':
-    # dataMat, labelMat = loadDataSet('testSet.txt')
+    dataMat, labelMat = loadDataSet('testSet.txt')
     # 显示分好类的 散点数据集
     # showDataSet1(dataMat, labelMat)
-    # b, alphas = smoSimple(dataMat, labelMat, 0.6, 0.001, 40)
-    # w = get_w(dataMat, labelMat, alphas)
-    # showClassifer(dataMat, w, b)
+    b, alphas = simpleSMO(dataMat, labelMat, 0.6, 0.001, 40)
+    w = get_w(dataMat, labelMat, alphas)
+    showClassifer(dataMat,w, b)
 
-    print(selectJrand(2, 10))
+    # print(selectJrand(2, 10))
