@@ -81,7 +81,16 @@ Modify:
 
 def selectJrand(i, m):
     j = i  # 选择一个不等于i的j
-    while (j == i):
+    while j == i:
+        #  函数原型：  numpy.random.uniform(low,high,size)
+        # 功能：从一个均匀分布[low,high)中随机采样，注意定义域是左闭右开，即包含low，不包含high.
+        j = int(random.uniform(0, m))
+    return j
+
+
+def selectJrand1(i, m):
+    j = i
+    while j == i:
         j = int(random.uniform(0, m))
     return j
 
@@ -107,6 +116,7 @@ Modify:
 
 
 def clipAlpha(aj, H, L):
+    # L <= aj <= H
     if aj > H:
         aj = H
     if L > aj:
@@ -284,6 +294,70 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
     return b, alphas
 
 
+def simpleSMO(dataMatIn, classLabels, C, toler, maxIter):
+    #  C - 松弛变量  toler - 容错率  maxIter - 最大迭代次数
+    # 将 dataMatIn ,classLabels 从 list  转化为 numpy 中的 matrix矩阵
+    dataMatrix = np.mat(dataMatIn)
+    labelMat = np.mat(classLabels)
+    # 初始化 参数 b ，后面需要更新迭代，计算 dataMatrix 的维度，np.shape =（n,m）
+    b = 0
+    m, n = np.shape(dataMatrix)
+    # 初始化 参数 alpha 为 （m,1）维度的 0 矩阵 ,后面需要更新迭代
+    alphas = np.mat(np.zeros(m, 1))
+    # 初始化迭代次数  iter_num = 0
+    iter_num = 0
+    # 最多迭代 maxIter 次
+    while iter_num < maxIter:
+        alphaPairsChanged = 0
+        for i in range(m):
+            fXi = float(np.multiply(alphas, labelMat).T * (dataMatrix * dataMatrix[i, :]).T) + b
+            # Ei = f(xi) - yi
+            Ei = fXi - float(labelMat[i])
+            # 优化更新 alpha ，设定一定的容错率 toler - 容错率
+            # ??? 0 < alphas < C   labelMat[i] * Ei
+            if ((labelMat[i] * Ei < -toler) and (alphas[i] < C)) or ((labelMat[i] * Ei > toler) and (alphas[i] > 0)):
+                #  随机选择另一个 跟 alpha_i 成对 优化的 alpha_j
+                j = selectJrand(i, m)
+                # 步骤1 ：计算误差 Ej
+                fXj = float(np.multiply(alphas, labelMat).T * (dataMatrix * dataMatrix[j, :].T)) + b
+                Ej = fXj - float(labelMat[j])
+                # 保存更新前的 alpha i  and  j value 值，使用时 拷贝 .copy()
+                alphaIold = alphas[i].copy()
+                alphaJold = alphas[j].copy()
+                # 步骤2 ： 计算上届 L 和下届 H
+                if labelMat[i] != labelMat[j]:
+                    L = max(0, alphas[j] - alphas[i])
+                    H = min(C, C + alphas[j] + alphas[i])
+                else:
+                    L = max(0, alphas[j] + alphas[i] - C)
+                    H = min(C, alphas[j] + alphas[i])
+                if L == H:
+                    print("L==H")
+                    # continue 是 跳出本次循环，本次循环中，后面的语句就不执行了 break 是跳出整个 for 循环
+                    continue
+                # 步骤3 ; 计算 eta 就是那个 η ，就是 学习速率 learning rate = xi.T* xi + xj.T * xj - 2xi.T * xj
+                # 不过这里是按 负 值计算 当 > 0 时则结束本次循环，且 continue
+                eta = 2.0 * dataMatrix[i,:].T * dataMatrix[j:] - dataMatrix[i:] * dataMatrix[i,:].T -dataMatrix[j:]* dataMatrix[j,:].T
+                if eta > 0: print('eta > = 0'); continue
+                # 步骤4;更新 alpha_j
+                alphas[j] -= labelMat[j](Ei - Ej)/eta
+                # 步骤5;修剪 alpha_j
+                alphas[j] = clipAlpha(alphas[j],H,L)
+                if abs(alphas[j] - alphaJold) < 0.00001:
+                    print('alpha_j 变化太小')
+                    continue
+                # 步骤6;更新 alpha_i
+                alphas[i] += labelMat[i] * labelMat[j]*(alphaJold - alphas[j])
+                # 步骤7;更新 b_1 and b_2
+
+                # 步骤8;根据 b_1 and b_2 更新 b
+                # 统计优化次数
+                # 打印统计信息
+
+        return b,alphas
+
+
+
 """
 函数说明:分类结果可视化
 
@@ -361,8 +435,11 @@ def get_w(dataMat, labelMat, alphas):
 
 
 if __name__ == '__main__':
-    dataMat, labelMat = loadDataSet('testSet.txt')
-    showDataSet1(dataMat,labelMat)
+    # dataMat, labelMat = loadDataSet('testSet.txt')
+    # 显示分好类的 散点数据集
+    # showDataSet1(dataMat, labelMat)
     # b, alphas = smoSimple(dataMat, labelMat, 0.6, 0.001, 40)
     # w = get_w(dataMat, labelMat, alphas)
     # showClassifer(dataMat, w, b)
+
+    print(selectJrand(2, 10))
