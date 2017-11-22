@@ -35,6 +35,31 @@ def loadDataSet(fileName):
     return dataMat, labelMat
 
 
+#
+# >>> a = []
+# >>> a.append([1,2])
+# >>> a
+# [[1, 2]]
+# >>> a.append([2,3])
+# >>> a
+# [[1, 2], [2, 3]]
+# >>> exit()
+
+def loadDataSet1(fileName):
+    # 创建 最后要返回的 training data数据矩阵，和 label 标签矩阵, [] 是list
+    dataMat = []
+    labelMat = []
+    fr = open(fileName)
+    # 逐行读取，滤除空格等
+    for line in fr.readlines():
+        # testSet 训练数据是这样子的[7.916831	-1.781735	1 ]
+        # 0 ,1 索引是 数据，2 索引位置是标签
+        lineArr = line.strip().split('\t')
+        dataMat.append([float(line[0]), float(line[1])])
+        labelMat.append(float(line[2]))
+    return dataMat, labelMat
+
+
 """
 函数说明:随机选择alpha
 
@@ -123,6 +148,18 @@ def showDataSet(dataMat, labelMat):
     plt.show()
 
 
+def showDataSet1(dataMat, labelMat):
+    # 先把 dataMat 中的数据集，拆分为 正样本和 负样本 ，根据 对应 label 分类，然后存储对应数据
+    data_plus = []
+    data_minus = []
+    # for 循环遍历 dataMat ,if 判断对应 label 是否>0
+    for i in range(len(dataMat)):
+        if (labelMat[i] > 0):
+            data_plus.append(dataMat[i])
+        else:
+            data_minus.append(dataMat[i])
+
+
 """
 函数说明:简化版SMO算法
 
@@ -182,7 +219,10 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
                     H = min(C, alphas[j] + alphas[i])
                 if L == H: print("L==H"); continue
                 # 步骤3：计算eta
-                eta = 2.0 * dataMatrix[i, :] * dataMatrix[j, :].T - dataMatrix[i, :] * dataMatrix[i, :].T - dataMatrix[ j,:] * dataMatrix[j, :].T
+                eta = 2.0 * dataMatrix[i, :] * dataMatrix[j, :].T - dataMatrix[i, :] * dataMatrix[i, :].T - dataMatrix[
+                                                                                                            j,
+                                                                                                            :] * dataMatrix[
+                                                                                                                 j, :].T
                 if eta >= 0: print("eta>=0"); continue
                 # 步骤4：更新alpha_j
                 alphas[j] -= labelMat[j] * (Ei - Ej) / eta
@@ -192,8 +232,22 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
                 # 步骤6：更新alpha_i
                 alphas[i] += labelMat[j] * labelMat[i] * (alphaJold - alphas[j])
                 # 步骤7：更新b_1和b_2
-                b1 = b - Ei - labelMat[i] * (alphas[i] - alphaIold) * dataMatrix[i, :] * dataMatrix[i, :].T - labelMat[j] * (alphas[ j] - alphaJold) * dataMatrix[i,:] * dataMatrix[j,:].T
-                b2 = b - Ej - labelMat[i] * (alphas[i] - alphaIold) * dataMatrix[i, :] * dataMatrix[j, :].T - labelMat[j] * (alphas[j] - alphaJold) * dataMatrix[j,:] * dataMatrix[j,:].T
+                b1 = b - Ei - labelMat[i] * (alphas[i] - alphaIold) * dataMatrix[i, :] * dataMatrix[i, :].T - labelMat[
+                                                                                                                  j] * (
+                                                                                                                  alphas[
+                                                                                                                      j] - alphaJold) * dataMatrix[
+                                                                                                                                        i,
+                                                                                                                                        :] * dataMatrix[
+                                                                                                                                             j,
+                                                                                                                                             :].T
+                b2 = b - Ej - labelMat[i] * (alphas[i] - alphaIold) * dataMatrix[i, :] * dataMatrix[j, :].T - labelMat[
+                                                                                                                  j] * (
+                                                                                                                  alphas[
+                                                                                                                      j] - alphaJold) * dataMatrix[
+                                                                                                                                        j,
+                                                                                                                                        :] * dataMatrix[
+                                                                                                                                             j,
+                                                                                                                                             :].T
                 # 步骤8：根据b_1和b_2更新b
                 if (0 < alphas[i]) and (C > alphas[i]):
                     b = b1
