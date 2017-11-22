@@ -344,7 +344,7 @@ def simpleSMO(dataMatIn, classLabels, C, toler, maxIter):
                                                                                                                  j, :].T
                 if eta > 0: print('eta > = 0'); continue
                 # 步骤4;更新 alpha_j
-                alphas[j] -= labelMat[j]*(Ei - Ej) / eta
+                alphas[j] -= labelMat[j] * (Ei - Ej) / eta
                 # 步骤5;修剪 alpha_j
                 alphas[j] = clipAlpha(alphas[j], H, L)
                 if abs(alphas[j] - alphaJold) < 0.00001:
@@ -409,6 +409,7 @@ Modify:
 
 
 def showClassifer(dataMat, w, b):
+    #  w - 直线法向量 b - 直线解决
     # 绘制样本点
     data_plus = []  # 正样本
     data_minus = []  # 负样本
@@ -419,6 +420,7 @@ def showClassifer(dataMat, w, b):
             data_minus.append(dataMat[i])
     data_plus_np = np.array(data_plus)  # 转换为numpy矩阵
     data_minus_np = np.array(data_minus)  # 转换为numpy矩阵
+    # s=30,- size 散点的大小, alpha=0.7 透明程度
     plt.scatter(np.transpose(data_plus_np)[0], np.transpose(data_plus_np)[1], s=30, alpha=0.7)  # 正样本散点图
     plt.scatter(np.transpose(data_minus_np)[0], np.transpose(data_minus_np)[1], s=30, alpha=0.7)  # 负样本散点图
     # 绘制直线
@@ -458,18 +460,37 @@ Modify:
 """
 
 
+def study_tile():
+    a = np.mat([[2, 3], [4, 5], [6, 7]])
+    c = a.reshape(1, -1)
+    # a.reshape(-1, 1)
+    # [[2]
+    #  [3]
+    #  [4]
+    #  [5]
+    #  [6]
+    #  [7]]
+    # a.reshape(1, -1)
+    # [[2 3 4 5 6 7]]
+    print("a.reshape()", c)
+    # np.tile(c,(1, 3)) 把 C 矩阵，复制 （m times,n times） m
+    print('np.tile()',np.tile(c,(1, 2)))
+
+
 def get_w(dataMat, labelMat, alphas):
     alphas, dataMat, labelMat = np.array(alphas), np.array(dataMat), np.array(labelMat)
+    # w 是 前面求导得出的 公式 W = ∑₁ⁿ ai yi xi 
     w = np.dot((np.tile(labelMat.reshape(1, -1).T, (1, 2)) * dataMat).T, alphas)
     return w.tolist()
 
 
 if __name__ == '__main__':
-    dataMat, labelMat = loadDataSet('testSet.txt')
-    # 显示分好类的 散点数据集
-    # showDataSet1(dataMat, labelMat)
-    b, alphas = simpleSMO(dataMat, labelMat, 0.6, 0.001, 40)
-    w = get_w(dataMat, labelMat, alphas)
-    showClassifer(dataMat,w, b)
+    # dataMat, labelMat = loadDataSet('testSet.txt')
+    # # 显示分好类的 散点数据集
+    # # showDataSet1(dataMat, labelMat)
+    # b, alphas = simpleSMO(dataMat, labelMat, 0.6, 0.001, 40)
+    # w = get_w(dataMat, labelMat, alphas)
+    # showClassifer(dataMat, w, b)
+    study_tile()
 
     # print(selectJrand(2, 10))
