@@ -154,10 +154,26 @@ def showDataSet1(dataMat, labelMat):
     data_minus = []
     # for 循环遍历 dataMat ,if 判断对应 label 是否>0
     for i in range(len(dataMat)):
-        if (labelMat[i] > 0):
+        if labelMat[i] > 0:
             data_plus.append(dataMat[i])
         else:
             data_minus.append(dataMat[i])
+    # 将数据转化为 numpy 矩阵,array 二维数组
+    data_plus_np = np.array(data_plus)
+    data_minus_np = np.array(data_minus)
+    # print(data_plus_np) 原來是 （n,2） n 行 2 列
+    # [[7.55151 - 1.58003]
+    #  [8.127113  1.274372]
+    #  ..................
+    #  [ 7.921057 -1.327587]
+    # [ 8.500757  1.492372]]
+    # plt 绘画，正样本散点 np.transpose 转置 变为 （2，n） 2 行 n 列，为了方便取值
+    #  [0]  0 行 则取值全部为横坐标 [1]取值全部为纵坐标 1 行
+    # print('np.transpose(data_plus_np)', np.transpose(data_plus_np))
+    plt.scatter(np.transpose(data_plus_np)[0], np.transpose(data_plus_np)[1])
+    # plt scatter 画，负样本散点图
+    plt.scatter(np.transpose(data_minus_np)[0], np.transpose(data_minus_np)[1])
+    plt.show()
 
 
 """
@@ -184,10 +200,10 @@ Modify:
 
 def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
     # 转换为numpy的mat存储
-    dataMatrix = np.mat(dataMatIn);
+    dataMatrix = np.mat(dataMatIn)
     labelMat = np.mat(classLabels).transpose()
     # 初始化b参数，统计dataMatrix的维度
-    b = 0;
+    b = 0
     m, n = np.shape(dataMatrix)
     # 初始化alpha参数，设为0
     alphas = np.mat(np.zeros((m, 1)))
@@ -208,8 +224,8 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
                 fXj = float(np.multiply(alphas, labelMat).T * (dataMatrix * dataMatrix[j, :].T)) + b
                 Ej = fXj - float(labelMat[j])
                 # 保存更新前的aplpha值，使用深拷贝
-                alphaIold = alphas[i].copy();
-                alphaJold = alphas[j].copy();
+                alphaIold = alphas[i].copy()
+                alphaJold = alphas[j].copy()
                 # 步骤2：计算上下界L和H
                 if (labelMat[i] != labelMat[j]):
                     L = max(0, alphas[j] - alphas[i])
@@ -346,6 +362,7 @@ def get_w(dataMat, labelMat, alphas):
 
 if __name__ == '__main__':
     dataMat, labelMat = loadDataSet('testSet.txt')
-    b, alphas = smoSimple(dataMat, labelMat, 0.6, 0.001, 40)
-    w = get_w(dataMat, labelMat, alphas)
-    showClassifer(dataMat, w, b)
+    showDataSet1(dataMat,labelMat)
+    # b, alphas = smoSimple(dataMat, labelMat, 0.6, 0.001, 40)
+    # w = get_w(dataMat, labelMat, alphas)
+    # showClassifer(dataMat, w, b)
