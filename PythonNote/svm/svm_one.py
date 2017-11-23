@@ -436,9 +436,16 @@ def showClassifer(dataMat, w, b):
     y1, y2 = (-b - a1 * x1) / a2, (-b - a1 * x2) / a2
     plt.plot([x1, x2], [y1, y2])
     # 找出支持向量点
+    # enumerate(iter)
+    # 接受一个可迭代的对象作为参数，返回一个enumerate
+    # 对象（同时也是一个迭代器），该对象生成由iter每个元素的index值和item值组成的元组
+    # alphas 是个 可迭代的 参数对象 alpha 是每个迭代的变量  i 是 该 alpha 索引
     for i, alpha in enumerate(alphas):
         if abs(alpha) > 0:
             x, y = dataMat[i]
+            # [x], [y] 在（x,y ）坐标点上 画上 大红圈 圈起来 ，表示 支持向量
+            # s=150 大小, c='none' color 没有 , alpha=0.7 透明度, linewidth=1.5 线的 宽度, edgecolor='red' 边缘的颜色是红色
+            # 也就是 先画一个大圆 大圆 是没有颜色的，但大圆的边缘有颜色 宽为 1.5 红色的边缘
             plt.scatter([x], [y], s=150, c='none', alpha=0.7, linewidth=1.5, edgecolor='red')
     plt.show()
 
