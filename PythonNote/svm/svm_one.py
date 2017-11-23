@@ -394,7 +394,7 @@ def simpleSMO(dataMatIn, classLabels, C, toler, maxIter):
 Parameters:
 	dataMat - 数据矩阵
     w - 直线法向量
-    b - 直线解决
+    b - 直线截距
 Returns:
     无
 Author:
@@ -423,13 +423,16 @@ def showClassifer(dataMat, w, b):
     # s=30,- size 散点的大小, alpha=0.7 透明程度
     plt.scatter(np.transpose(data_plus_np)[0], np.transpose(data_plus_np)[1], s=30, alpha=0.7)  # 正样本散点图
     plt.scatter(np.transpose(data_minus_np)[0], np.transpose(data_minus_np)[1], s=30, alpha=0.7)  # 负样本散点图
-    # 绘制直线
+    # 绘制直线 知道 两个点的坐标 （x1,y1） (x2,y2)以及直线上的截距 b 可绘画该直线，即 决策面
+    # 找到 x1 = max(dataMat)[0] 数据集中最大值
     x1 = max(dataMat)[0]
     x2 = min(dataMat)[0]
     a1, a2 = w
     b = float(b)
     a1 = float(a1[0])
     a2 = float(a2[0])
+    # P 28 公式 a1 y1 + a2 y2 = B
+    # 直线方程一般式 aX + by + c =0 -> y = (-c -ax)/b -> (-b -a1x1)/a2
     y1, y2 = (-b - a1 * x1) / a2, (-b - a1 * x2) / a2
     plt.plot([x1, x2], [y1, y2])
     # 找出支持向量点
@@ -479,18 +482,20 @@ def study_tile():
 
 def get_w(dataMat, labelMat, alphas):
     alphas, dataMat, labelMat = np.array(alphas), np.array(dataMat), np.array(labelMat)
-    # w 是 前面求导得出的 公式 W = ∑₁ⁿ ai yi xi 
+    # w 是 前面求导得出的 公式 W = ∑₁ⁿ ai yi xi
     w = np.dot((np.tile(labelMat.reshape(1, -1).T, (1, 2)) * dataMat).T, alphas)
     return w.tolist()
 
 
 if __name__ == '__main__':
-    # dataMat, labelMat = loadDataSet('testSet.txt')
+    dataMat, labelMat = loadDataSet('testSet.txt')
     # # 显示分好类的 散点数据集
     # # showDataSet1(dataMat, labelMat)
-    # b, alphas = simpleSMO(dataMat, labelMat, 0.6, 0.001, 40)
-    # w = get_w(dataMat, labelMat, alphas)
-    # showClassifer(dataMat, w, b)
-    study_tile()
-
+    # 参数 数据集，标签集   C - 松弛变量  toler - 容错率  maxIter - 最大迭代次数
+    b, alphas = simpleSMO(dataMat, labelMat, 0.6, 0.001, 40)
+    w = get_w(dataMat, labelMat, alphas)
+    # w - 直线法向量     b - 直线截距
+    showClassifer(dataMat, w, b)
+    # study_tile()
+    #
     # print(selectJrand(2, 10))
