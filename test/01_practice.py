@@ -1,16 +1,13 @@
-what a great day 1 
+Sueña el rico en su riqueza,
+que más cuidados le ofrece;
 
-what a great day 2 
+sueña el pobre que padece
+su miseria y su pobreza;
 
-what a great day 3 
+sueña el que a medrar empieza,
+sueña el que afana y pretende,
+sueña el que agravia y ofende,
 
-what a great day 4 
-
-what a great day 5 
-
-what a great day 6 
-
-what a great day 7 
-what a great day 8 
-what a great day 9 
-what a great day 10 
+y en el mundo, en conclusión,
+todos sueñan lo que son,
+aunque ninguno lo entiende.
